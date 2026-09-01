@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Susan Celebrations — Website Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{ padding:0; }
+  .admin-shell{ max-width:1000px; margin:0 auto; padding:50px 5vw 100px; }
+  .admin-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:34px; flex-wrap:wrap; gap:16px; }
+  .admin-top h1{ font-size:1.6rem; }
+  .admin-top p{ font-size:0.85rem; margin-top:4px; }
+  .admin-tag{ display:inline-block; background:var(--blush); color:var(--maroon-dark); font-size:0.7rem; padding:4px 12px; border-radius:999px; font-weight:600; letter-spacing:0.04em; margin-bottom:10px; }
+
+  /* lock screen */
+  #lockScreen{ max-width:380px; margin:120px auto; text-align:center; }
+  #lockScreen input{ width:100%; padding:14px 16px; border-radius:10px; border:1.5px solid rgba(201,151,75,0.4); font-size:1rem; margin:20px 0; text-align:center; letter-spacing:0.2em; }
+  #lockError{ color:var(--maroon); font-size:0.82rem; display:none; margin-top:-10px; margin-bottom:16px; }
+
+  /* tabs */
+  .tab-bar{ display:flex; gap:8px; border-bottom:1.5px solid rgba(201,151,75,0.25); margin-bottom:36px; flex-wrap:wrap; }
+  .tab-btn{ padding:12px 20px; font-size:0.88rem; font-weight:500; color:var(--ink-soft); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1.5px; background:none; border-top:none; border-left:none; border-right:none; font-family:'Jost',sans-serif; }
+  .tab-btn.active{ color:var(--maroon-dark); border-bottom-color:var(--maroon); font-weight:600; }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; animation:stepIn .4s ease; }
+
+  .card{ background:var(--ivory); border:1px solid rgba(201,151,75,0.25); border-radius:16px; padding:26px 28px; margin-bottom:20px; }
+  .card h3{ font-size:1.05rem; margin-bottom:16px; }
+  .field label{ display:block; font-size:0.8rem; color:var(--maroon-dark); font-weight:500; margin-bottom:6px; }
+  .field input, .field textarea{ width:100%; padding:11px 14px; border-radius:8px; border:1.5px solid rgba(201,151,75,0.35); font-family:'Jost',sans-serif; font-size:0.92rem; margin-bottom:14px; background:#fff; }
+  .field textarea{ min-height:60px; resize:vertical; }
+  .svc-grid{ display:grid; grid-template-columns:1fr 2fr 1fr; gap:14px; align-items:start; }
+  .svc-grid .field{ margin:0; }
+  .gal-row{ display:grid; grid-template-columns:90px 1fr 1fr; gap:16px; align-items:center; margin-bottom:18px; }
+  .gal-preview{ width:90px; height:90px; border-radius:10px; object-fit:cover; background:linear-gradient(150deg,#7A1B3D,#EACB84); }
+  .gal-preview.has-photo{ background:none; }
+  .file-btn{ display:inline-block; padding:9px 16px; border:1.5px dashed var(--gold); border-radius:8px; font-size:0.8rem; cursor:pointer; text-align:center; color:var(--maroon-dark); }
+  .file-btn input{ display:none; }
+
+  .sticky-actions{ position:sticky; bottom:0; background:var(--cream); padding:18px 0; border-top:1px solid rgba(201,151,75,0.25); display:flex; gap:14px; justify-content:flex-end; margin-top:20px; }
+  #statusMsg{ font-size:0.85rem; color:var(--maroon-dark); align-self:center; margin-right:auto; }
+
+  table.enq-table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  table.enq-table th, table.enq-table td{ padding:10px 12px; border-bottom:1px solid rgba(201,151,75,0.2); text-align:left; }
+  table.enq-table th{ color:var(--maroon-dark); font-weight:600; }
+  .empty-note{ color:var(--ink-soft); font-size:0.88rem; padding:20px 0; text-align:center; }
+  pre.code-block{ background:var(--maroon-dark); color:#fce9ef; padding:18px; border-radius:10px; font-size:0.78rem; overflow-x:auto; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <div class="admin-tag">Private</div>
+  <h1 class="display">Website Editor</h1>
+  <p style="margin-top:10px;">Enter the admin password to manage your site's content, gallery, and enquiries.</p>
+  <input type="password" id="pwInput" placeholder="Password" autocomplete="off">
+  <div id="lockError">Incorrect password. Try again.</div>
+  <button class="btn btn-primary" id="unlockBtn" style="width:100%; justify-content:center;">Unlock</button>
+  <p style="margin-top:18px; font-size:0.75rem; opacity:0.7;">Default password: <strong>susan2026</strong> — change it near the top of this file's script.</p>
+</div>
+
+<div class="admin-shell" id="adminShell" style="display:none;">
+  <div class="admin-top">
+    <div>
+      <div class="admin-tag">Website Editor</div>
+      <h1 class="display">Susan Celebrations — Admin</h1>
+      <p>Edit your content, gallery, and video, then download your updated site.</p>
+    </div>
+    <a href="index.html" class="btn btn-outline" target="_blank">View Live Site ↗</a>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="content">Content</button>
+    <button class="tab-btn" data-tab="gallery">Gallery &amp; Video</button>
+    <button class="tab-btn" data-tab="enquiries">Enquiries</button>
+  </div>
+
+  <!-- ============ CONTENT TAB ============ -->
+  <div class="tab-panel active" data-panel="content">
+    <div class="card">
+      <h3>Hero Section</h3>
+      <div class="field">
+        <label>Main headline</label>
+        <input type="text" id="heroMain" value="You Dream It, We Plan It,">
+      </div>
+      <div class="field">
+        <label>Emphasized headline (shown in gold italics)</label>
+        <input type="text" id="heroEm" value="You Live It.">
+      </div>
+      <div class="field">
+        <label>Subtitle</label>
+        <textarea id="heroSubInput"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Services (name, description &amp; optional price)</h3>
+      <div id="servicesEditor"></div>
+    </div>
+  </div>
+
+  <!-- ============ GALLERY TAB ============ -->
+  <div class="tab-panel" data-panel="gallery">
+    <div class="card">
+      <h3>Glimpse Video</h3>
+      <p style="margin-bottom:14px;">Upload your own highlight video (at least 10 seconds) to replace the placeholder clip.</p>
+      <label class="file-btn">📹 Upload video (.mp4)<input type="file" id="videoUpload" accept="video/mp4"></label>
+      <span id="videoFileName" style="margin-left:12px; font-size:0.82rem; color:var(--ink-soft);"></span>
+      <p style="margin-top:16px; margin-bottom:14px;">Optional: upload a poster thumbnail (shown before playback starts).</p>
+      <label class="file-btn">🖼️ Upload poster image<input type="file" id="posterUpload" accept="image/*"></label>
+      <span id="posterFileName" style="margin-left:12px; font-size:0.82rem; color:var(--ink-soft);"></span>
+    </div>
+
+    <div class="card">
+      <h3>Gallery Photos &amp; Captions</h3>
+      <div id="galleryEditor"></div>
+    </div>
+  </div>
+
+  <!-- ============ ENQUIRIES TAB ============ -->
+  <div class="tab-panel" data-panel="enquiries">
+    <div class="card">
+      <h3>Recent Booking Enquiries (this device only)</h3>
+      <p style="margin-bottom:14px;">These are enquiries submitted from your booking form <strong>on this same browser</strong>. They won't include enquiries submitted by visitors on other devices — see below for a way to capture those centrally.</p>
+      <div id="enquiriesList"></div>
+      <button class="btn btn-outline" id="clearEnquiries" style="margin-top:16px;">Clear List</button>
+    </div>
+
+    <div class="card">
+      <h3>Want enquiries from every visitor, from anywhere?</h3>
+      <p style="margin-bottom:14px;">That needs a tiny free backend. The easiest option: a free Google Sheet that logs every submission automatically. Steps:</p>
+      <ol style="margin:0 0 16px 20px; padding:0; font-size:0.88rem; line-height:1.8; color:var(--ink-soft);">
+        <li>Create a new Google Sheet, then go to <strong>Extensions → Apps Script</strong>.</li>
+        <li>Paste the script below, replacing the sheet name if needed, and click <strong>Deploy → New deployment → Web app</strong> (access: "Anyone").</li>
+        <li>Copy the deployment URL it gives you.</li>
+        <li>Send me that URL and I'll wire your booking form to POST enquiries straight into your sheet.</li>
+      </ol>
+      <pre class="code-block">function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const d = JSON.parse(e.postData.contents);
+  sheet.appendRow([new Date(), d.name, d.phone, d.email, d.type, d.date, d.guests, d.notes]);
+  return ContentService.createTextOutput("OK");
+}</pre>
+    </div>
+  </div>
+
+  <div class="sticky-actions">
+    <span id="statusMsg"></span>
+    <button class="btn btn-outline" id="reloadSite">Reload From Live Site</button>
+    <button class="btn btn-primary" id="exportSite">⬇ Download Updated Website</button>
+  </div>
+</div>
+
+<script>
+  const ADMIN_PASSWORD = "susan2026"; // change this to your own password
+
+  document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+  document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  function tryUnlock(){
+    const val = document.getElementById('pwInput').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('adminShell').style.display = 'block';
+      loadSite();
+    } else {
+      document.getElementById('lockError').style.display = 'block';
+    }
+  }
+
+  // ---------------- Tabs ----------------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  // ---------------- Load current site into a hidden parsed doc ----------------
+  let siteDoc = null;
+  let videoDataUri = null;
+  let posterDataUri = null;
+  let galleryPhotos = {}; // { "1": dataUri }
+
+  async function loadSite(){
+    setStatus('Loading current site…');
+    try{
+      const res = await fetch('index.html?_=' + Date.now());
+      if (!res.ok) throw new Error('fetch failed');
+      const text = await res.text();
+      siteDoc = new DOMParser().parseFromString(text, 'text/html');
+      populateForms();
+      setStatus('Loaded current site content.');
+    }catch(err){
+      setStatus('⚠️ Could not load index.html — make sure this file is served alongside index.html via a local server (e.g. VS Code Live Server), not opened directly as file://.');
+    }
+  }
+
+  function populateForms(){
+    const heroTitle = siteDoc.getElementById('heroTitle');
+    const em = heroTitle.querySelector('em');
+    const emText = em ? em.textContent : '';
+    const mainText = heroTitle.textContent.replace(emText, '').trim();
+    document.getElementById('heroMain').value = mainText;
+    document.getElementById('heroEm').value = emText;
+    document.getElementById('heroSubInput').value = siteDoc.getElementById('heroSub').textContent.trim();
+
+    // services
+    const svcEditor = document.getElementById('servicesEditor');
+    svcEditor.innerHTML = '';
+    siteDoc.querySelectorAll('[data-svc]').forEach(card => {
+      const id = card.dataset.svc;
+      const name = card.querySelector('.svc-name').textContent.trim();
+      const desc = card.querySelector('.svc-desc').textContent.trim();
+      const priceEl = card.querySelector('.svc-price');
+      const price = priceEl ? priceEl.textContent.trim() : '';
+      const row = document.createElement('div');
+      row.className = 'svc-grid';
+      row.style.marginBottom = '14px';
+      row.innerHTML = `
+        <div class="field"><label>Name</label><input type="text" data-svc-field="name" data-svc-id="${id}" value="${escapeAttr(name)}"></div>
+        <div class="field"><label>Description</label><input type="text" data-svc-field="desc" data-svc-id="${id}" value="${escapeAttr(desc)}"></div>
+        <div class="field"><label>Price (optional)</label><input type="text" data-svc-field="price" data-svc-id="${id}" value="${escapeAttr(price)}" placeholder="e.g. ₹15,000+"></div>
+      `;
+      svcEditor.appendChild(row);
+    });
+
+    // gallery
+    const galEditor = document.getElementById('galleryEditor');
+    galEditor.innerHTML = '';
+    galleryPhotos = {};
+    siteDoc.querySelectorAll('#galleryGrid .polaroid').forEach((fig, i) => {
+      const gid = i + 1;
+      const caption = fig.querySelector('figcaption').textContent.trim();
+      const desc = fig.dataset.desc || '';
+      const row = document.createElement('div');
+      row.className = 'gal-row';
+      row.innerHTML = `
+        <img class="gal-preview" id="galPreview${gid}" src="" alt="">
+        <div class="field" style="margin:0;"><label>Caption</label><input type="text" data-gal-field="caption" data-gal-id="${gid}" value="${escapeAttr(caption)}"></div>
+        <div>
+          <div class="field" style="margin-bottom:8px;"><label>Description</label><input type="text" data-gal-field="desc" data-gal-id="${gid}" value="${escapeAttr(desc)}"></div>
+          <label class="file-btn" style="font-size:0.72rem; padding:6px 10px;">📷 Upload photo<input type="file" accept="image/*" data-gal-photo="${gid}"></label>
+        </div>
+      `;
+      galEditor.appendChild(row);
+      // preview: use existing background if present via computed style trick (fallback gradient shown by CSS class)
+      const previewImg = row.querySelector(`#galPreview${gid}`);
+      previewImg.style.display = 'none'; // gradient shows via .gal-preview background until a photo is uploaded
+    });
+
+    document.querySelectorAll('[data-gal-photo]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const gid = e.target.dataset.galPhoto;
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          galleryPhotos[gid] = reader.result;
+          const prev = document.getElementById('galPreview' + gid);
+          prev.src = reader.result;
+          prev.style.display = 'block';
+          prev.classList.add('has-photo');
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+
+  document.getElementById('videoUpload').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById('videoFileName').textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = () => { videoDataUri = reader.result; };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('posterUpload').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById('posterFileName').textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = () => { posterDataUri = reader.result; };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('reloadSite').addEventListener('click', loadSite);
+
+  // ---------------- Enquiries ----------------
+  function renderEnquiries(){
+    const list = JSON.parse(localStorage.getItem('susanEnquiries') || '[]');
+    const host = document.getElementById('enquiriesList');
+    if (list.length === 0) {
+      host.innerHTML = '<div class="empty-note">No enquiries recorded on this device yet.</div>';
+      return;
+    }
+    let rows = list.map(d => `
+      <tr>
+        <td>${d.name || '—'}</td>
+        <td>${d.phone || '—'}</td>
+        <td>${d.type || '—'}</td>
+        <td>${d.date || '—'}</td>
+        <td>${d.guests || '—'}</td>
+        <td>${new Date(d.submittedAt).toLocaleString()}</td>
+      </tr>`).join('');
+    host.innerHTML = `<table class="enq-table"><thead><tr><th>Name</th><th>Phone</th><th>Type</th><th>Date</th><th>Guests</th><th>Submitted</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  document.getElementById('clearEnquiries').addEventListener('click', () => {
+    localStorage.removeItem('susanEnquiries');
+    renderEnquiries();
+  });
+  renderEnquiries();
+
+  // ---------------- Export ----------------
+  function escapeAttr(str){ return (str || '').replace(/"/g, '&quot;'); }
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+  }
+
+  document.getElementById('exportSite').addEventListener('click', () => {
+    if (!siteDoc) { setStatus('⚠️ Site not loaded yet — cannot export.'); return; }
+
+    // hero
+    const mainVal = document.getElementById('heroMain').value.trim();
+    const emVal = document.getElementById('heroEm').value.trim();
+    siteDoc.getElementById('heroTitle').innerHTML = `${escapeHtml(mainVal)} <em>${escapeHtml(emVal)}</em>`;
+    siteDoc.getElementById('heroSub').textContent = document.getElementById('heroSubInput').value.trim();
+
+    // services
+    document.querySelectorAll('[data-svc-field]').forEach(input => {
+      const id = input.dataset.svcId;
+      const field = input.dataset.svcField;
+      const card = siteDoc.querySelector(`[data-svc="${id}"]`);
+      if (!card) return;
+      if (field === 'name') card.querySelector('.svc-name').textContent = input.value.trim();
+      if (field === 'desc') card.querySelector('.svc-desc').textContent = input.value.trim();
+      if (field === 'price') {
+        const priceEl = card.querySelector('.svc-price');
+        const val = input.value.trim();
+        priceEl.textContent = val;
+        priceEl.style.display = val ? 'inline-block' : 'none';
+      }
+    });
+
+    // gallery captions/descriptions
+    document.querySelectorAll('[data-gal-field]').forEach(input => {
+      const gid = parseInt(input.dataset.galId, 10);
+      const field = input.dataset.galField;
+      const fig = siteDoc.querySelectorAll('#galleryGrid .polaroid')[gid - 1];
+      if (!fig) return;
+      if (field === 'caption') fig.querySelector('figcaption').textContent = input.value.trim();
+      if (field === 'desc') fig.dataset.desc = input.value.trim();
+    });
+
+    // gallery photos
+    Object.keys(galleryPhotos).forEach(gid => {
+      const fig = siteDoc.querySelectorAll('#galleryGrid .polaroid')[gid - 1];
+      if (!fig) return;
+      const frame = fig.querySelector('.frame');
+      frame.style.backgroundImage = `url(${galleryPhotos[gid]})`;
+      const svg = frame.querySelector('svg:not(.view-hint svg)');
+      if (svg) svg.style.display = 'none';
+    });
+
+    // video / poster
+    if (videoDataUri) {
+      siteDoc.querySelectorAll('video source').forEach(s => { s.src = videoDataUri; });
+    }
+    if (posterDataUri) {
+      siteDoc.querySelectorAll('video[poster]').forEach(v => { v.setAttribute('poster', posterDataUri); });
+    }
+
+    // serialize and download
+    const html = '<!DOCTYPE html>\n' + siteDoc.documentElement.outerHTML;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setStatus('✅ Downloaded updated index.html — replace your old file with this one.');
+  });
+
+  function setStatus(msg){ document.getElementById('statusMsg').textContent = msg; }
+</script>
+</body>
+</html>

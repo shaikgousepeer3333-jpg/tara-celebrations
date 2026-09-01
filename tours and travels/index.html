@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT Tours & Travels | Self-Drive Car, Superbike & Bicycle Rentals</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Floating Announcement Bar (Hidden on Admin) -->
+  <aside class="top-notice-bar" id="topNoticeBar" aria-label="Announcement">
+    <div class="notice-container">
+      <span><i class="fa-solid fa-bolt" aria-hidden="true"></i> <strong>Peak Season Alert:</strong> High Himalayan & Coastal routes filling fast. Book early for verified GPS units!</span>
+      <a href="https://wa.me/917981793207" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Live Fleet Dispatch: +91 7981793207</a>
+    </div>
+  </aside>
+
+  <!-- Navigation Bar (Hidden on Admin via ID) -->
+  <header class="navbar" id="mainHeaderNav">
+    <div class="nav-container">
+      <a href="javascript:void(0)" class="logo-wrapper" onclick="switchView('landing-full')">
+        <img src="logo.png" alt="TT Tours and Travels Logo" class="brand-logo">
+      </a>
+      
+      <nav class="nav-menu" id="nav-menu">
+        <a href="javascript:void(0)" class="nav-link active" onclick="switchView('landing-full')">Home</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="switchView('page-fleet')">Fleet & Pricing</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="switchView('page-trips')">Road Trips</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="switchView('page-policy')">Rental Policy</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="switchView('page-about')">About TT</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="switchView('page-contact')">Hubs & Contact</a>
+      </nav>
+
+      <div class="nav-actions" id="navActionsGroup">
+        <!-- Account / Login Button -->
+        <button class="nav-user-btn" id="navUserBtn" onclick="openUserAuthModal()" aria-label="Customer Account & Booking Status">
+          <i class="fa-solid fa-user-shield" id="navUserIcon"></i>
+          <span id="navUserLabel">Account / Login</span>
+        </button>
+
+        <a href="https://wa.me/917981793207" target="_blank" rel="noopener noreferrer" class="call-btn"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> <span>+91 7981793207</span></a>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Menu"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Master Content Wrapper -->
+  <main id="app">
+
+    <!-- =========================================================
+         VIEW 1: COMPREHENSIVE LANDING PAGE
+    ========================================================= -->
+    <div id="landing-full" class="view-container active-view">
+      
+      <!-- Hero Section -->
+      <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="badge-pill pulse"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Govt. Authorized Commercial Self-Drive Fleet</div>
+          <h1 class="hero-title">No Speed Chokes. No Kilometer Limits. <br><span class="gradient-text">Pure Highway Freedom.</span></h1>
+          <p class="hero-subtitle">Rent verified BS6 Himalayan cruisers, 4x4 Thar off-roaders, luxury automatic sedans, and pro-trail MTBs across 15+ Indian operational hubs.</p>
+          
+          <!-- Search Engine Bar with Centered Tabs -->
+          <div class="search-strip-container">
+            <div class="category-tabs-strip">
+              <button class="strip-tab active" data-type="all"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> All Fleet</button>
+              <button class="strip-tab" data-type="bike"><i class="fa-solid fa-motorcycle" aria-hidden="true"></i> Superbikes</button>
+              <button class="strip-tab" data-type="car"><i class="fa-solid fa-car" aria-hidden="true"></i> 4x4 & Cars</button>
+              <button class="strip-tab" data-type="bicycle"><i class="fa-solid fa-bicycle" aria-hidden="true"></i> Bicycles</button>
+            </div>
+
+            <form class="horizontal-booking-strip" id="bookingForm">
+              <div class="strip-field">
+                <span class="field-caption">City</span>
+                <div class="field-input-box">
+                  <i class="fa-solid fa-location-dot field-icon" aria-hidden="true"></i>
+                  <select id="pickupCity" required>
+                    <option value="" disabled selected>Select City</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Manali">Manali</option>
+                    <option value="Visakhapatnam">Visakhapatnam</option>
+                    <option value="Dehradun">Dehradun</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="strip-field">
+                <span class="field-caption">Book at <i class="fa-solid fa-circle-info info-icon" title="Rental tariff structure"></i></span>
+                <div class="field-input-box">
+                  <span class="currency-symbol">₹</span>
+                  <select id="rentalPlan">
+                    <option value="Daily">Daily Plan</option>
+                    <option value="Weekly">Weekly Plan</option>
+                    <option value="Monthly" selected>Monthly Plan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="strip-field">
+                <span class="field-caption">Pick Up Date</span>
+                <div class="field-input-box">
+                  <input type="date" id="pickupDate" required>
+                </div>
+              </div>
+
+              <div class="strip-field">
+                <span class="field-caption">Pick Time</span>
+                <div class="field-input-box">
+                  <i class="fa-regular fa-clock field-icon" aria-hidden="true"></i>
+                  <select id="pickupTime" required>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="01:00 PM">01:00 PM</option>
+                    <option value="02:00 PM">02:00 PM</option>
+                    <option value="03:00 PM" selected>03:00 PM</option>
+                    <option value="04:00 PM">04:00 PM</option>
+                    <option value="05:00 PM">05:00 PM</option>
+                    <option value="06:00 PM">06:00 PM</option>
+                    <option value="07:00 PM">07:00 PM</option>
+                    <option value="08:00 PM">08:00 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="strip-field">
+                <span class="field-caption">Drop Off Date</span>
+                <div class="field-input-box">
+                  <input type="date" id="dropDate" required>
+                </div>
+              </div>
+
+              <div class="strip-field">
+                <span class="field-caption">Drop Time</span>
+                <div class="field-input-box">
+                  <i class="fa-regular fa-clock field-icon" aria-hidden="true"></i>
+                  <select id="dropTime" required>
+                    <option value="" disabled selected>-- select --</option>
+                    <option value="09:00 AM">09:00 AM</option>
+                    <option value="10:00 AM">10:00 AM</option>
+                    <option value="11:00 AM">11:00 AM</option>
+                    <option value="12:00 PM">12:00 PM</option>
+                    <option value="01:00 PM">01:00 PM</option>
+                    <option value="02:00 PM">02:00 PM</option>
+                    <option value="03:00 PM">03:00 PM</option>
+                    <option value="04:00 PM">04:00 PM</option>
+                    <option value="05:00 PM">05:00 PM</option>
+                    <option value="06:00 PM">06:00 PM</option>
+                    <option value="07:00 PM">07:00 PM</option>
+                    <option value="08:00 PM">08:00 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="strip-action-box">
+                <button type="submit" class="btn-strip-search">Find Ride</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust Metrics Bar -->
+      <div class="perks-strip">
+        <div class="perk-item">
+          <i class="fa-solid fa-id-card-clip" aria-hidden="true"></i>
+          <div>
+            <h4>DigiLocker 2-Min KYC</h4>
+            <p>100% paperless verification with zero manual branch queueing.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <i class="fa-solid fa-road" aria-hidden="true"></i>
+          <div>
+            <h4>True Unlimited Kilometers</h4>
+            <p>No penalty deductions or per-km surprise bills on vehicle return.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <i class="fa-solid fa-truck-pickup" aria-hidden="true"></i>
+          <div>
+            <h4>24x7 Pan-India RSA</h4>
+            <p>Emergency mechanics and flatbed recovery across 1,800+ national routes.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
+          <div>
+            <h4>Instant Refund Guarantee</h4>
+            <p>Refundable deposits released to original account within 120 minutes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fleet Showcase Section -->
+      <section class="section-container" id="landing-fleet">
+        <div class="section-header">
+          <span class="sub-heading">Showroom Inspected Machines</span>
+          <h2 class="section-title">Rent By Category</h2>
+          <p class="section-desc">Every machine is fitted with OEM speed trackers, fresh CEAT/Pirelli tires, dual ABS, and valid All-India Tourist Permits (AITP).</p>
+          
+          <div class="fleet-filter-chips">
+            <button class="chip active" onclick="filterFleet('all', 'landingFleetGrid')">All Vehicles</button>
+            <button class="chip" onclick="filterFleet('bike', 'landingFleetGrid')">Motorcycles & Superbikes</button>
+            <button class="chip" onclick="filterFleet('car', 'landingFleetGrid')">SUVs & Sedans</button>
+            <button class="chip" onclick="filterFleet('bicycle', 'landingFleetGrid')">Expedition Bicycles</button>
+          </div>
+        </div>
+        <div class="fleet-grid" id="landingFleetGrid"></div>
+      </section>
+
+      <!-- Expedition Routes Section -->
+      <section class="section-container" id="landing-trips">
+        <div class="section-header">
+          <span class="sub-heading">Self-Drive Road Trip Packages</span>
+          <h2 class="section-title">Iconic Highways Pre-Mapped for You</h2>
+          <p class="section-desc">Book your vehicle bundled with GPX coordinates, high-altitude acclimatization homestays, and emergency fuel drops.</p>
+        </div>
+
+        <div class="tour-cards-container">
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">High Altitude Terrain</span>
+            </div>
+            <div class="tour-info">
+              <h3>Himalayan Odyssey & Leh Circuit</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Manali &rarr; Atal Tunnel &rarr; Jispa &rarr; Sarchu &rarr; Leh &rarr; Khardung La</p>
+              <div class="tour-details">
+                <p>Equipped with sub-zero oil tune, auxiliary fog beams, puncture sealant kits, and portable medical O2 canisters.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 7 Days / 6 Nights</span>
+                <span class="tour-price">From ₹18,500</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Himalayan Odyssey & Leh Circuit', '7 Days / 6 Nights', 'Manali - Jispa - Sarchu - Leh - Khardung La', 'Royal Enfield Himalayan 450 / Thar 4x4 Diesel')">View Trail Breakdown</button>
+            </div>
+          </div>
+
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">Coastal Highway 66</span>
+            </div>
+            <div class="tour-info">
+              <h3>Konkan Sea Breeze Expedition</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Mumbai &rarr; Alibaug &rarr; Murud &rarr; Ganpatipule &rarr; Tarkarli &rarr; Goa</p>
+              <div class="tour-details">
+                <p>Coastal switchbacks and ferry crossings. Includes verified homestays and coastal seafood pitstop recommendations.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 4 Days / 3 Nights</span>
+                <span class="tour-price">From ₹9,200</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Konkan Sea Breeze Expedition', '4 Days / 3 Nights', 'Mumbai - Alibaug - Ganpatipule - Goa', 'KTM 390 Adventure / Mahindra Thar 4x4')">View Trail Breakdown</button>
+            </div>
+          </div>
+
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">Western Ghats Trail</span>
+            </div>
+            <div class="tour-info">
+              <h3>Munnar, Sholayar & 40 Hairpins</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Kochi &rarr; Munnar Tea Hills &rarr; Marayoor &rarr; Valparai (40 Hairpins)</p>
+              <div class="tour-details">
+                <p>Lush rainforest sweeps and technical hairpins. Full brake pad replacements provided prior to every rental.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 3 Days / 2 Nights</span>
+                <span class="tour-price">From ₹6,500</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Munnar, Sholayar & 40 Hairpins', '3 Days / 2 Nights', 'Kochi - Munnar - Valparai', 'RE Interceptor 650 / Hyundai Creta SX')">View Trail Breakdown</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 40-Point Inspection Grid -->
+      <section class="section-container">
+        <div class="policy-details-box">
+          <div class="section-header" style="margin-bottom: 1.5rem;">
+            <span class="sub-heading">Fleet Quality Assurance</span>
+            <h2>Our 40-Point Pre-Dispatch Audit</h2>
+            <p class="section-desc">We never hand over keys before this checklist is signed by a certified TT technician.</p>
+          </div>
+          <div class="checklist-grid">
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>Braking System:</strong> Front & rear brake pads inspected at >75% life</div>
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>Tire Health:</strong> Tread depth >3.5mm with tubeless puncture sealant</div>
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>Legal Papers:</strong> Original RC, PUC certificate, and Bumper-to-Bumper Insurance</div>
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>Sanitization:</strong> Handles, dashboard, steering, and gear levers UV sanitized</div>
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>Emergency Kit:</strong> First aid pouch, tire inflator, and jump cable box included</div>
+            <div class="check-item"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> <strong>GPS Tracking:</strong> SOS button and 24x7 satellite beacon active</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transparent Onboarding: How To Rent in 3 Steps -->
+      <section class="section-container" id="landing-how">
+        <div class="section-header">
+          <span class="sub-heading">Transparent Onboarding</span>
+          <h2 class="section-title">How To Rent in 3 Steps</h2>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">01</div>
+            <div class="step-icon"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i></div>
+            <h3>Book Online or on WhatsApp</h3>
+            <p>Pick your dates and model. Submit your reservation request instantly.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">02</div>
+            <div class="step-icon"><i class="fa-solid fa-shield-cat" aria-hidden="true"></i></div>
+            <h3>DigiLocker KYC Verification</h3>
+            <p>Authenticate your Driver's License and Aadhaar securely. No physical document retention.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">03</div>
+            <div class="step-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></div>
+            <h3>Key Acceptance & Handover</h3>
+            <p>Sign the digital key acceptance agreement and conduct a 360-degree video inspection.</p>
+          </div>
+        </div>
+
+        <div class="policy-details-box" style="margin-top: 3rem;">
+          <h2>Frequently Asked Questions</h2>
+          <div class="faq-accordion">
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-question" aria-hidden="true"></i> What documents are mandatory for verification?</h4>
+              <p>For Indian nationals: Original Driving License (valid for LMV/MCWG) + Aadhaar Card. For foreign nationals: Valid Passport, Visa & International Driving Permit (IDP).</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Is fuel included in the rental price?</h4>
+              <p>We operate on a transparent same-to-same fuel policy. Take the vehicle at whatever level (e.g. 50% or full) and return it at the same level. No artificial surcharge penalties.</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-question" aria-hidden="true"></i> What happens if there is an on-road breakdown?</h4>
+              <p>Call our 24x7 Roadside Assistance at <strong>+91 7981793207</strong>. We dispatch our authorized regional recovery partner or provide an immediate replacement vehicle if repair exceeds 3 hours.</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-question" aria-hidden="true"></i> What is the security deposit refund timeline?</h4>
+              <p>Most commuter bikes and cars have ₹0 security deposit. For superbikes and 4x4s, deposits are returned via UPI/IMPS directly to your bank account within 2 hours of vehicle check-in.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customer Reviews -->
+      <section class="testimonials-strip">
+        <div class="section-header">
+          <span class="sub-heading">Real Rider Experiences</span>
+          <h2 class="section-title">Trusted by 15,000+ Travellers</h2>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"Took the Royal Enfield Himalayan 450 for a 10-day Spiti Valley circuit. The bike had brand new Ceat Gripp XL tires and full crash guards. Never missed a beat at 15,000 ft."</p>
+            <div class="user-meta">
+              <strong>Vikram Malhotra</strong>
+              <span>Chandigarh to Spiti Circuit</span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"Rented the Thar 4x4 Hardtop at Goa Airport (Mopa). Smooth contactless pickup at the parking bay. Zero deposit deduction drama upon return. 10/10 service!"</p>
+            <div class="user-meta">
+              <strong>Dr. Ananya Sen</strong>
+              <span>North Goa & Dudhsagar Expedition</span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"Hired 4 Trek Marlin 7 MTBs for an early morning sunrise ride from Vizag Beach Road to Bheemili. Pristine gear shift tuning and lightweight helmets."</p>
+            <div class="user-meta">
+              <strong>Karthik Reddy</strong>
+              <span>Vizag Coastal Fitness Club</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="section-container" id="landing-about">
+        <div class="about-grid">
+          <div class="about-text">
+            <span class="sub-heading">Our Roots</span>
+            <h2>Built by Motorcyclists & Road Trippers.</h2>
+            <p>TT Tours and Travels was founded to fix aggregator problems: tired clutches, bald tires, hidden per-kilometer charges, and delayed deposit refunds.</p>
+            <p>We own, service, and calibrate 100% of our fleet through company-managed service garages. Whether conquering Umling La or cruising the East Coast Road, our machines are dialed in for peak reliability.</p>
+            
+            <div class="stat-counter-grid">
+              <div class="stat-box">
+                <h3>500+</h3>
+                <p>Commercial Fleet Units</p>
+              </div>
+              <div class="stat-box">
+                <h3>15+</h3>
+                <p>Direct Hub Locations</p>
+              </div>
+              <div class="stat-box">
+                <h3>99.4%</h3>
+                <p>Zero-Breakdown Ratio</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-image-card">
+            <img src="logo.png" alt="TT Logo" class="about-big-logo">
+            <div class="about-quote">
+              <p>"The road doesn't belong to the car you drive, but the spirit with which you explore it."</p>
+              <span>— TT Operations & Engineering Team</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hubs & Contact Section -->
+      <section class="section-container" id="landing-contact">
+        <div class="section-header">
+          <span class="sub-heading">Pan-India Network</span>
+          <h2 class="section-title">Regional Hub Stations</h2>
+          <p class="section-desc">Pick up at our hubs or request doorstep drop-off at your hotel or airport terminal.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="hub-list">
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Hyderabad Central Hub</h4>
+                <p>Plot 42, Financial District, Near IKEA, Gachibowli, Hyderabad, Telangana</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Bengaluru Koramangala Hub</h4>
+                <p>80 Feet Main Road, 4th Block, Koramangala, Bengaluru, Karnataka</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Goa Coastal Station</h4>
+                <p>Main Candolim Road, Opp. Whispering Palms, North Goa</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Manali Himalayan Depot</h4>
+                <p>Circuit House Road, Near Mall Road, Old Manali, Himachal Pradesh</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form-box">
+            <h3>Direct Customer Inquiry Desk</h3>
+            <form onsubmit="handleInquiry(event)">
+              <div class="form-control">
+                <label>Your Full Name</label>
+                <input type="text" name="name" required placeholder="e.g. Aditi Roy">
+              </div>
+              <div class="form-control">
+                <label>Email Address</label>
+                <input type="email" name="email" required placeholder="name@domain.com">
+              </div>
+              <div class="form-control">
+                <label>Phone / WhatsApp Number</label>
+                <input type="tel" name="phone" required placeholder="+91 79817 93207">
+              </div>
+              <div class="form-control">
+                <label>Trip Requirements & Dates</label>
+                <textarea name="message" rows="4" required placeholder="Specify vehicle model, pickup hub, travel dates, or group size..."></textarea>
+              </div>
+              <button type="submit" class="btn-contact-submit">
+                Transmit to TT Desk <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- =========================================================
+         VIEW 2: DEDICATED FLEET PAGE
+    ========================================================= -->
+    <div id="page-fleet" class="view-container">
+      <div class="page-banner">
+        <h1>All Fleet Models & Daily Tariffs</h1>
+        <p>100% verified All-India Tourist Permit vehicles with zero speed chokes and unlimited kilometers.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="fleet-filter-chips">
+          <button class="chip active" onclick="filterFleet('all', 'dedicatedFleetGrid')">All Vehicles</button>
+          <button class="chip" onclick="filterFleet('bike', 'dedicatedFleetGrid')">Motorcycles & Superbikes</button>
+          <button class="chip" onclick="filterFleet('car', 'dedicatedFleetGrid')">SUVs & Sedans</button>
+          <button class="chip" onclick="filterFleet('bicycle', 'dedicatedFleetGrid')">Bicycles & MTBs</button>
+        </div>
+        <div class="fleet-grid" id="dedicatedFleetGrid"></div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         VIEW 3: DEDICATED ROAD TRIPS PAGE
+    ========================================================= -->
+    <div id="page-trips" class="view-container">
+      <div class="page-banner">
+        <h1>Turnkey Road Trip Packages</h1>
+        <p>Pre-scouted routes, tested fuel points, high-altitude support vehicles, and hotel partnerships.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="tour-cards-container">
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">High Altitude Terrain</span>
+            </div>
+            <div class="tour-info">
+              <h3>Himalayan Odyssey & Leh Circuit</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Manali &rarr; Atal Tunnel &rarr; Jispa &rarr; Sarchu &rarr; Leh &rarr; Khardung La</p>
+              <div class="tour-details">
+                <p>Equipped with sub-zero oil tune, auxiliary fog beams, puncture sealant kits, and portable medical O2 canisters.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 7 Days / 6 Nights</span>
+                <span class="tour-price">From ₹18,500</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Himalayan Odyssey & Leh Circuit', '7 Days / 6 Nights', 'Manali - Jispa - Sarchu - Leh - Khardung La', 'Royal Enfield Himalayan 450 / Thar 4x4 Diesel')">View Trail Breakdown</button>
+            </div>
+          </div>
+
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">Coastal Highway 66</span>
+            </div>
+            <div class="tour-info">
+              <h3>Konkan Sea Breeze Expedition</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Mumbai &rarr; Alibaug &rarr; Murud &rarr; Ganpatipule &rarr; Tarkarli &rarr; Goa</p>
+              <div class="tour-details">
+                <p>Coastal switchbacks and ferry crossings. Includes verified homestays and coastal seafood pitstop recommendations.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 4 Days / 3 Nights</span>
+                <span class="tour-price">From ₹9,200</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Konkan Sea Breeze Expedition', '4 Days / 3 Nights', 'Mumbai - Alibaug - Ganpatipule - Goa', 'KTM 390 Adventure / Mahindra Thar 4x4')">View Trail Breakdown</button>
+            </div>
+          </div>
+
+          <div class="tour-card">
+            <div class="tour-img-box" style="background-image: url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80');">
+              <span class="tour-tag">Western Ghats Trail</span>
+            </div>
+            <div class="tour-info">
+              <h3>Munnar, Sholayar & 40 Hairpins</h3>
+              <p class="tour-route"><i class="fa-solid fa-route" aria-hidden="true"></i> Kochi &rarr; Munnar Tea Hills &rarr; Marayoor &rarr; Valparai (40 Hairpins)</p>
+              <div class="tour-details">
+                <p>Lush rainforest sweeps and technical hairpins. Full brake pad replacements provided prior to every rental.</p>
+              </div>
+              <div class="tour-meta">
+                <span><i class="fa-solid fa-calendar" aria-hidden="true"></i> 3 Days / 2 Nights</span>
+                <span class="tour-price">From ₹6,500</span>
+              </div>
+              <button class="btn-tour" onclick="openRouteDetails('Munnar, Sholayar & 40 Hairpins', '3 Days / 2 Nights', 'Kochi - Munnar - Valparai', 'RE Interceptor 650 / Hyundai Creta SX')">View Trail Breakdown</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         VIEW 4: DEDICATED RENTAL POLICY PAGE
+    ========================================================= -->
+    <div id="page-policy" class="view-container">
+      <div class="page-banner">
+        <h1>Rental Rules, Insurance & Fair Use</h1>
+        <p>No fine print. Complete clarity on deposits, fuel, insurance coverage, and cancellation rights.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="policy-details-box">
+          <h2>Terms of Service & Operational Rules</h2>
+          <div class="faq-accordion">
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Commercial Permitted Fleet</h4>
+              <p>Every motorized vehicle operates on valid Yellow Board / Commercial Tourist Permits (AITP). You will never face harassment from RTO officers or state border check-posts.</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Comprehensive Bumper-to-Bumper Insurance</h4>
+              <p>All cars and motorcycles include comprehensive third-party and own-damage insurance. Maximum customer liability in case of accidental damage is capped at the standard security deposit amount.</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Free Modification & Cancellation</h4>
+              <p>Cancel up to 12 hours prior to scheduled pickup for a 100% full refund with zero cancellation fee. Reschedule your dates anytime free of charge subject to vehicle availability.</p>
+            </div>
+            <div class="faq-item">
+              <h4><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Interstate Border Taxes</h4>
+              <p>Interstate state entry permits (where applicable) are paid directly via the government Parivahan portal. Our team provides active QR assistance for instant border clearance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         VIEW 5: DEDICATED ABOUT US PAGE
+    ========================================================= -->
+    <div id="page-about" class="view-container">
+      <div class="page-banner">
+        <h1>About TT Tours and Travels</h1>
+        <p>Engineering authentic self-drive road trips with high-performance, showroom-kept machines.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="about-grid">
+          <div class="about-text">
+            <span class="sub-heading">The TT Journey</span>
+            <h2>We don't just rent vehicles; we power expeditions.</h2>
+            <p>TT Tours and Travels was formed by a passionate collective of endurance motorcyclists, rally drivers, and cycling enthusiasts. We believe the true soul of India is discovered off the tourist bus routes—on the high Himalayan passes, coastal bypasses, and forest trails.</p>
+            <p>Every single machine in our inventory is owned, managed, and systematically rebuilt in our specialized maintenance bays with OEM parts. No aggregations, no sub-let condition compromises.</p>
+          </div>
+
+          <div class="about-image-card">
+            <img src="logo.png" alt="TT Logo Large" class="about-big-logo">
+            <div class="about-quote">
+              <p>"The road is calling, and your machine is fueled and ready."</p>
+              <span>— TT Engineering & Ride Desk</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         VIEW 6: DEDICATED CONTACT & HUBS PAGE
+    ========================================================= -->
+    <div id="page-contact" class="view-container">
+      <div class="page-banner">
+        <h1>Hub Stations & Support Desk</h1>
+        <p>Find your nearest vehicle pickup station or get in touch with our operations desk.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="contact-grid">
+          <div class="hub-list">
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Hyderabad Central Hub</h4>
+                <p>Plot 42, Financial District, Gachibowli, Hyderabad, Telangana</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Bengaluru Koramangala Hub</h4>
+                <p>80 Feet Road, 4th Block, Koramangala, Bengaluru, Karnataka</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Goa Candolim Hub</h4>
+                <p>Main Candolim Road, Near Candolim Beach, North Goa</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+
+            <div class="hub-card">
+              <i class="fa-solid fa-map-pin" aria-hidden="true"></i>
+              <div>
+                <h4>Manali Himalayan Hub</h4>
+                <p>Mall Road Circuit House Lane, Manali, Himachal Pradesh</p>
+                <span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Desk WhatsApp: +91 7981793207</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-form-box">
+            <h3>Direct Customer Inquiry Desk</h3>
+            <form onsubmit="handleInquiry(event)">
+              <div class="form-control">
+                <label>Your Full Name</label>
+                <input type="text" name="name" required placeholder="e.g. Aditi Roy">
+              </div>
+              <div class="form-control">
+                <label>Email Address</label>
+                <input type="email" name="email" required placeholder="name@domain.com">
+              </div>
+              <div class="form-control">
+                <label>Phone / WhatsApp Number</label>
+                <input type="tel" name="phone" required placeholder="+91 79817 93207">
+              </div>
+              <div class="form-control">
+                <label>Trip Requirements & Dates</label>
+                <textarea name="message" rows="4" required placeholder="Specify vehicle model, pickup hub, travel dates, or group size..."></textarea>
+              </div>
+              <button type="submit" class="btn-contact-submit">
+                Transmit to TT Desk <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         VIEW 7: ADMIN MANAGEMENT CONSOLE (WITH DYNAMIC CMS & KYC)
+    ========================================================= -->
+    <div id="page-admin" class="view-container">
+      <div class="page-banner" style="background: linear-gradient(135deg, #09202c 0%, #10405a 100%);">
+        <h1><i class="fa-solid fa-shield-halved"></i> TT Dispatch Command & Website Manager</h1>
+        <p>Full control console: Manage reservations, review DigiLocker KYC documents, print invoices, and add/remove website fleet.</p>
+      </div>
+
+      <div class="section-container">
+        <!-- Admin Logged In Dashboard -->
+        <div id="adminDashboardPanel" style="display: none;">
+          <div class="admin-top-bar">
+            <div>
+              <h2>Admin Control Center</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Switch between booking approvals, KYC verification, and website content control below.</p>
+            </div>
+            <button class="btn-secondary-sm" onclick="handleAdminLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout Admin</button>
+          </div>
+
+          <!-- Admin Sub-Navigation Tabs -->
+          <div class="admin-cms-tabs">
+            <button class="admin-tab-btn active" onclick="switchAdminTab('bookings')"><i class="fa-solid fa-calendar-check"></i> Inbound Reservations & KYC</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('cms')"><i class="fa-solid fa-screwdriver-wrench"></i> Manage Website Fleet & Inventory</button>
+          </div>
+
+          <!-- Tab 1: Bookings Management & KYC Verification -->
+          <div id="adminTabBookings" class="admin-tab-content active">
+            <div class="admin-stats-grid">
+              <div class="admin-stat-card">
+                <span class="stat-num" id="adminTotalBookings">0</span>
+                <span class="stat-label">Total Bookings Received</span>
+              </div>
+              <div class="admin-stat-card">
+                <span class="stat-num" id="adminPendingBookings" style="color: var(--adventure-orange);">0</span>
+                <span class="stat-label">Pending Reviews</span>
+              </div>
+              <div class="admin-stat-card">
+                <span class="stat-num" id="adminApprovedBookings" style="color: var(--emerald-teal);">0</span>
+                <span class="stat-label">Approved & Dispatched</span>
+              </div>
+            </div>
+
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Ref ID</th>
+                    <th>Customer & Attached Docs</th>
+                    <th>Vehicle & Key Status</th>
+                    <th>Destination & Hub</th>
+                    <th>Invoice & Tariff</th>
+                    <th>Status</th>
+                    <th>Actions & Dispatch</th>
+                  </tr>
+                </thead>
+                <tbody id="adminBookingsTableBody">
+                  <!-- Dynamically populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 2: Website Content Manager (CMS) -->
+          <div id="adminTabCms" class="admin-tab-content" style="display: none;">
+            <div style="background: #ffffff; padding: 2rem; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 2rem;">
+              <h3 style="color: var(--primary-navy); margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-plus" style="color: var(--emerald-teal);"></i> Add New Vehicle to Website Fleet</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">Add a new motorcycle, SUV, or bicycle instantly. It will appear across the home page and fleet catalogs immediately.</p>
+              
+              <form id="addNewVehicleForm" onsubmit="handleAddNewVehicle(event)" class="modal-form" style="margin-top: 0;">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label>Vehicle Name</label>
+                    <input type="text" id="cmsNewName" required placeholder="e.g. Kawasaki Versys 1000">
+                  </div>
+                  <div class="form-control">
+                    <label>Category Type</label>
+                    <select id="cmsNewType" required>
+                      <option value="bike">Superbike / Motorcycle</option>
+                      <option value="car">SUV / 4x4 Car</option>
+                      <option value="bicycle">Bicycle / MTB</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label>Marketing Tagline</label>
+                    <input type="text" id="cmsNewTag" required placeholder="e.g. Inline-4 Tourer">
+                  </div>
+                  <div class="form-control">
+                    <label>Daily Tariff (₹)</label>
+                    <input type="number" id="cmsNewPrice" required placeholder="4500">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label>Engine / Spec 1</label>
+                    <input type="text" id="cmsNewEngine" required placeholder="1043cc / 118 BHP">
+                  </div>
+                  <div class="form-control">
+                    <label>Transmission / Spec 2</label>
+                    <input type="text" id="cmsNewSpeed" required placeholder="IMU ABS / Traction">
+                  </div>
+                </div>
+
+                <div class="form-control full-width">
+                  <label>Vehicle Image URL (Unsplash or Direct Link)</label>
+                  <input type="url" id="cmsNewImage" required placeholder="https://images.unsplash.com/photo-...">
+                </div>
+
+                <button type="submit" class="btn-confirm" style="margin-top: 0.5rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Vehicle to Live Website</button>
+              </form>
+            </div>
+
+            <div style="background: #ffffff; padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+              <h3 style="color: var(--primary-navy); margin-bottom: 1rem;"><i class="fa-solid fa-car-tunnel"></i> Current Active Inventory on Website</h3>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Image</th>
+                      <th>Model Name</th>
+                      <th>Category</th>
+                      <th>Daily Rate</th>
+                      <th>Specs</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminInventoryTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="adminLoginBox" class="auth-card-container">
+          <div class="auth-card">
+            <div class="auth-card-header">
+              <i class="fa-solid fa-lock auth-icon"></i>
+              <h3>TT Admin Portal Login</h3>
+              <p>Enter administrative credentials to access booking approvals & website manager.</p>
+            </div>
+            <form id="adminAuthForm" onsubmit="handleAdminLogin(event)">
+              <div class="form-control">
+                <label>Admin Username</label>
+                <input type="text" id="adminUsername" required placeholder="admin">
+              </div>
+              <div class="form-control">
+                <label>Admin Password</label>
+                <input type="password" id="adminPassword" required placeholder="••••••••">
+              </div>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">Default credentials: <code>admin</code> / <code>admin123</code></p>
+              <button type="submit" class="btn-confirm" style="width: 100%; margin-top: 1rem;"><i class="fa-solid fa-key"></i> Unlock Dashboard</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==============================================
+       CUSTOMER AUTH & DASHBOARD MODAL
+  =============================================== -->
+  <div class="modal-backdrop" id="userAuthModal">
+    <div class="modal-box" style="max-width: 580px;">
+      <button class="modal-close" onclick="closeUserAuthModal()" aria-label="Close Account Portal">&times;</button>
+      
+      <!-- State 1: Customer Login / Signup Switcher -->
+      <div id="customerAuthFormsState">
+        <div class="user-auth-tabs">
+          <button class="user-tab-btn active" id="tabCustomerLogin" onclick="toggleAuthTab('login')">Sign In</button>
+          <button class="user-tab-btn" id="tabCustomerRegister" onclick="toggleAuthTab('register')">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="modal-form" id="customerLoginForm" onsubmit="handleCustomerLogin(event)" style="margin-top: 1rem;">
+          <div class="form-control">
+            <label>Phone / WhatsApp Number or Email</label>
+            <input type="text" id="loginIdentifier" required placeholder="e.g. 7981793207 or name@email.com">
+          </div>
+          <div class="form-control">
+            <label>Account Password</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn-confirm"><i class="fa-solid fa-right-to-bracket"></i> Login & View Bookings</button>
+        </form>
+
+        <!-- Register Form (Includes File Uploads for License & Aadhaar) -->
+        <form class="modal-form" id="customerRegisterForm" onsubmit="handleCustomerRegister(event)" style="display: none; margin-top: 1rem;">
+          <div class="form-row">
+            <div class="form-control">
+              <label>Full Name</label>
+              <input type="text" id="regName" required placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="form-control">
+              <label>WhatsApp Contact Number</label>
+              <input type="tel" id="regPhone" required placeholder="e.g. 7981793207">
+            </div>
+          </div>
+          <div class="form-control">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" required placeholder="name@domain.com">
+          </div>
+          <div class="form-row">
+            <div class="form-control">
+              <label><i class="fa-solid fa-id-card" style="color: var(--emerald-teal);"></i> Upload Driver's License</label>
+              <input type="file" id="regLicenseFile" accept=".pdf,image/*" required>
+            </div>
+            <div class="form-control">
+              <label><i class="fa-solid fa-address-card" style="color: var(--emerald-teal);"></i> Upload Aadhaar / DigiLocker</label>
+              <input type="file" id="regAadhaarFile" accept=".pdf,image/*" required>
+            </div>
+          </div>
+          <div class="form-control">
+            <label>Set Account Password</label>
+            <input type="password" id="regPassword" required placeholder="••••••••">
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted); margin: -0.2rem 0 0;"><i class="fa-solid fa-circle-info"></i> Your License & Aadhaar are stored securely on your account — you won't need to upload them again on future bookings.</p>
+          <button type="submit" class="btn-confirm"><i class="fa-solid fa-user-plus"></i> Create Account & Submit DigiLocker KYC</button>
+        </form>
+      </div>
+
+      <!-- State 2: Customer Personal Dashboard -->
+      <div id="customerDashboardState" style="display: none;">
+        <div class="modal-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span class="pill-label">Verified Explorer Portal</span>
+              <h3 id="dashCustomerGreeting" style="margin-top: 0.2rem;">Welcome Back!</h3>
+            </div>
+            <button class="btn-logout-link" onclick="handleCustomerLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
+          </div>
+        </div>
+
+        <div class="customer-activity-box">
+          <h4 style="margin: 0.9rem 0 0.5rem; color: var(--primary-navy); font-size: 0.95rem;"><i class="fa-solid fa-clock-rotate-left"></i> Your Active Rental Bookings & Approval Status</h4>
+          <div id="customerBookingsList" class="activity-scroll-list">
+            <!-- Dynamic Customer Bookings Populated Here -->
+          </div>
+
+          <h4 style="margin: 1.2rem 0 0.5rem; color: var(--primary-navy); font-size: 0.95rem;"><i class="fa-solid fa-envelope-open-text"></i> Custom Tour & Desk Inquiries</h4>
+          <div id="customerInquiriesList" class="activity-scroll-list">
+            <!-- Dynamic Inquiries Populated Here -->
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <a href="https://wa.me/917981793207" target="_blank" class="btn-whatsapp-chat">
+            <i class="fa-brands fa-whatsapp"></i> Chat Directly with TT Dispatch Desk (+91 7981793207)
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==============================================
+       LIVE GPS & VEHICLE NAVIGATION TRACKER MODAL
+  =============================================== -->
+  <div class="modal-backdrop" id="liveGpsModal">
+    <div class="modal-box" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeLiveGpsModal()" aria-label="Close GPS Navigation">&times;</button>
+      <div class="modal-header">
+        <span class="pill-label" id="gpsModalBadge"><i class="fa-solid fa-satellite-dish"></i> Live GPS Telemetry</span>
+        <h3 id="gpsModalVehicleTitle">Vehicle Live Tracker</h3>
+        <p class="modal-price" id="gpsModalRef" style="font-size: 0.9rem; color: var(--text-muted);">Ref ID: #TT-000000</p>
+      </div>
+
+      <div class="gps-telemetry-container">
+        <div class="simulated-map-radar">
+          <div class="radar-sweep"></div>
+          <div class="pulse-beacon hub-point" title="Hub Station Depot"><i class="fa-solid fa-warehouse"></i></div>
+          <div class="pulse-beacon vehicle-point" id="gpsVehicleMarker" title="Vehicle Live GPS Location"><i class="fa-solid fa-car-side" id="gpsMarkerIcon"></i></div>
+          <div class="route-vector-line"></div>
+          <div class="map-status-overlay">
+            <span class="live-blink-dot"></span> <span id="gpsLiveStatusText">GPS Connected: Active Satellite Ping</span>
+          </div>
+        </div>
+
+        <div class="telemetry-readouts">
+          <div class="readout-box">
+            <span class="lbl"><i class="fa-solid fa-location-crosshairs"></i> Current Coordinates</span>
+            <strong id="gpsCoordinates">17.4399° N, 78.3806° E</strong>
+          </div>
+          <div class="readout-box">
+            <span class="lbl"><i class="fa-solid fa-gauge-high"></i> Speed / Status</span>
+            <strong id="gpsSpeed" style="color: var(--emerald-teal);">Stationary / Ready</strong>
+          </div>
+          <div class="readout-box">
+            <span class="lbl"><i class="fa-solid fa-route"></i> Destination Circuit</span>
+            <strong id="gpsDestination">Local City Commute</strong>
+          </div>
+          <div class="readout-box">
+            <span class="lbl"><i class="fa-solid fa-truck-ramp-box"></i> Delivery Stage</span>
+            <strong id="gpsDeliveryStage" style="color: var(--adventure-orange);">Hub Staging Bay</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.2rem; display: flex; gap: 0.6rem;">
+        <a href="#" id="gpsExternalMapsBtn" target="_blank" class="btn-confirm" style="flex: 1; font-size: 0.85rem; text-decoration: none; padding: 0.75rem;">
+          <i class="fa-solid fa-diamond-turn-right"></i> Open Turn-by-Turn Route in Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       RESERVATION MODAL & SUCCESS SCREEN (DIGILOCKER KYC & KEY ACCEPTANCE)
+  =============================================== -->
+  <div class="modal-backdrop" id="bookingModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeBookingModal()" aria-label="Close Reservation Form">&times;</button>
+      
+      <!-- State A: Reservation Input Form -->
+      <div id="bookingFormState">
+        <div class="modal-header">
+          <span class="pill-label" id="modalVehicleType">Vehicle Category</span>
+          <h3 id="modalVehicleName">Vehicle Name</h3>
+          <p class="modal-price" id="modalVehiclePrice">₹0 / day</p>
+        </div>
+
+        <form class="modal-form" id="confirmBookingForm">
+          <div class="form-row">
+            <div class="form-control">
+              <label>Full Name (as per Govt ID)</label>
+              <input type="text" id="custName" name="fullName" required placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="form-control">
+              <label>Phone / WhatsApp Number</label>
+              <input type="tel" id="custPhone" name="phone" required placeholder="e.g. 7981793207">
+            </div>
+          </div>
+
+          <!-- KYC status notice: shown instead of file inputs when not required (bicycle) or already on file (returning logged-in customer) -->
+          <div class="form-control full-width" id="kycStatusNotice" style="display: none; background: var(--bg-light); padding: 0.7rem 0.9rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600;"></div>
+
+          <!-- Document Upload Inputs for License & Aadhaar (hidden when not required) -->
+          <div class="form-row" id="bookingKycFileRow">
+            <div class="form-control">
+              <label><i class="fa-solid fa-id-card" style="color: var(--emerald-teal);"></i> Upload Driver's License</label>
+              <input type="file" id="custLicenseFile" name="licenseFile" accept=".pdf,image/*">
+            </div>
+            <div class="form-control">
+              <label><i class="fa-solid fa-address-card" style="color: var(--emerald-teal);"></i> Upload Aadhaar / DigiLocker</label>
+              <input type="file" id="custAadhaarFile" name="aadhaarFile" accept=".pdf,image/*">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-control">
+              <label>Rental Duration (Days)</label>
+              <input type="number" id="rentalDays" name="rentalDays" min="1" max="60" value="1" required>
+            </div>
+            <div class="form-control">
+              <label>Delivery / Pickup Hub</label>
+              <select id="deliveryType" name="deliveryType">
+                <option value="Hub Station Pickup (Free)">Hub Station Pickup (Free)</option>
+                <option value="Doorstep / Hotel Delivery (+₹300)">Doorstep / Hotel Delivery (+₹300)</option>
+                <option value="Airport Terminal Delivery (+₹500)">Airport Terminal Delivery (+₹500)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-control full-width">
+            <label><i class="fa-solid fa-map-location-dot" style="color: var(--adventure-orange);"></i> Places in India to Go (Destination Circuit)</label>
+            <select id="travelDestination" name="travelDestination" required>
+              <option value="" disabled selected>Select Travel Route / Circuit</option>
+              
+              <optgroup label="🏔️ High Altitude & Himalayan Circuits">
+                <option value="Leh-Ladakh & Khardung La Expedition">Leh-Ladakh & Khardung La Expedition</option>
+                <option value="Zanskar Valley & Shinku La Pass">Zanskar Valley & Shinku La Pass</option>
+                <option value="Spiti Valley & Kinnaur Extreme Circuit">Spiti Valley & Kinnaur Extreme Circuit</option>
+                <option value="Manali, Rohtang Pass, Solang & Kasol">Manali, Rohtang Pass, Solang & Kasol</option>
+                <option value="Shimla, Narkanda & Sangla Valley">Shimla, Narkanda & Sangla Valley</option>
+                <option value="Rishikesh, Chopta & Tungnath Circuit">Rishikesh, Chopta & Tungnath Circuit</option>
+                <option value="Char Dham Yatra Self-Drive Highway">Char Dham Yatra Self-Drive Highway</option>
+                <option value="Kashmir Valley & Gulmarg Circuit">Kashmir Valley & Gulmarg Circuit</option>
+              </optgroup>
+
+              <optgroup label="🌊 Coastal & Beach Highways">
+                <option value="Goa Coastline (North to South Beaches)">Goa Coastline (North to South Beaches)</option>
+                <option value="Konkan Coastal Highway 66 (Mumbai-Goa)">Konkan Coastal Highway 66 (Mumbai-Goa)</option>
+                <option value="East Coast Road (Chennai to Pondicherry)">East Coast Road (Chennai to Pondicherry)</option>
+                <option value="Vizag Beach Road & Bheemili Coastal Drive">Vizag Beach Road & Bheemili Coastal Drive</option>
+                <option value="Gokarna, Karwar & Murudeshwar Beach Trail">Gokarna, Karwar & Murudeshwar Beach Trail</option>
+                <option value="Kanyakumari & Rameswaram Ocean Highway">Kanyakumari & Rameswaram Ocean Highway</option>
+              </optgroup>
+
+              <optgroup label="🌲 Western & Eastern Ghats Rainforest">
+                <option value="Munnar, Thekkady & 40 Valparai Hairpins">Munnar, Thekkady & 40 Valparai Hairpins</option>
+                <option value="Ooty, Coonoor & Bandipur Forest Corridor">Ooty, Coonoor & Bandipur Forest Corridor</option>
+                <option value="Coorg, Chikmagalur & Kudremukh Ridge">Coorg, Chikmagalur & Kudremukh Ridge</option>
+                <option value="Wayanad & Kabini Jungle Safari Route">Wayanad & Kabini Jungle Safari Route</option>
+                <option value="Araku Valley & Lambasinghi Coffee Hills">Araku Valley & Lambasinghi Coffee Hills</option>
+                <option value="Mahabaleshwar, Panchgani & Lonavala Ghats">Mahabaleshwar, Panchgani & Lonavala Ghats</option>
+              </optgroup>
+
+              <optgroup label="🏰 Heritage, Royal & Desert Trails">
+                <option value="Rajasthan Forts: Jaipur, Jodhpur & Udaipur">Rajasthan Forts: Jaipur, Jodhpur & Udaipur</option>
+                <option value="Jaisalmer Sam Sand Dunes Desert Safari">Jaisalmer Sam Sand Dunes Desert Safari</option>
+                <option value="Rann of Kutch & White Desert Highway">Rann of Kutch & White Desert Highway</option>
+                <option value="Hampi Ruins & Badami Heritage Corridor">Hampi Ruins & Badami Heritage Corridor</option>
+              </optgroup>
+
+              <optgroup label="🌄 Northeast & Eastern Escapes">
+                <option value="Sikkim: Gangtok, Gurudongmar & Nathu La">Sikkim: Gangtok, Gurudongmar & Nathu La</option>
+                <option value="Meghalaya: Shillong, Cherrapunji & Dawki">Meghalaya: Shillong, Cherrapunji & Dawki</option>
+                <option value="Arunachal: Tawang & Sela Pass Expedition">Arunachal: Tawang & Sela Pass Expedition</option>
+                <option value="Darjeeling, Mirik & Kalimpong Loop">Darjeeling, Mirik & Kalimpong Loop</option>
+              </optgroup>
+
+              <optgroup label="🏙️ Local Commute & Weekend Getaways">
+                <option value="Local City Commute (Hub City Limits)">Local City Commute (Hub City Limits)</option>
+                <option value="Weekend Inter-City Expressway Drive (Within 300 KM)">Weekend Inter-City Expressway Drive (Within 300 KM)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-control full-width">
+            <label>Select Tour Add-on Gear</label>
+            <select id="addonOption" name="addonOption">
+              <option value="0">Standard (1 Helmet & Toolkit) - Free</option>
+              <option value="300">Dual Touring Helmets + Mobile Mount (+₹300)</option>
+              <option value="800">Complete Riding Jacket + Gloves (+₹800)</option>
+              <option value="1200">Touring Saddlebags + Action Cam Mount (+₹1,200)</option>
+            </select>
+          </div>
+
+          <!-- Key Acceptance Agreement Checkbox -->
+          <div class="form-control full-width" style="flex-direction: row; align-items: center; gap: 0.5rem; background: var(--bg-light); padding: 0.6rem; border-radius: var(--radius-sm);">
+            <input type="checkbox" id="keyAcceptanceCheck" required style="width: 18px; height: 18px; cursor: pointer;">
+            <label for="keyAcceptanceCheck" style="cursor: pointer; font-size: 0.76rem; color: var(--text-dark); margin: 0;">
+              I agree to the <strong>Digital Key Acceptance & Vehicle Handover Terms</strong>, verifying my license and liability compliance.
+            </label>
+          </div>
+
+          <div class="fare-calculation">
+            <div class="fare-row"><span>Base Daily Tariff:</span> <strong id="calcBase">₹0</strong></div>
+            <div class="fare-row"><span>Selected Add-ons:</span> <strong id="calcAddon">₹0</strong></div>
+            <div class="fare-row"><span>Govt. GST & Roadside Cover (18%):</span> <strong id="calcTax">₹0</strong></div>
+            <hr>
+            <div class="fare-row total"><span>Total Payable Amount:</span> <strong id="calcTotal" class="gradient-text">₹0</strong></div>
+          </div>
+
+          <button type="submit" id="bookSubmitBtn" class="btn-confirm"><i class="fa-solid fa-circle-check"></i> Submit Reservation Request</button>
+        </form>
+      </div>
+
+      <!-- State B: Submitted Successfully Screen -->
+      <div id="bookingSuccessState" class="booking-success-box" style="display: none;">
+        <div class="success-icon-wrap"><i class="fa-solid fa-circle-check"></i></div>
+        <h3>Submitted Successfully!</h3>
+        <p class="success-subtitle">Your reservation request and DigiLocker KYC have been registered in our central dispatch system.</p>
+        
+        <div class="booking-summary-pill" id="successSummaryContent">
+          <!-- Summary injected dynamically by JS -->
+        </div>
+
+        <p class="chat-prompt-text">Click below to initiate a WhatsApp chat with our operations desk and receive your instant booking voucher:</p>
+        
+        <a href="#" id="modalWhatsAppChatBtn" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-chat">
+          <i class="fa-brands fa-whatsapp"></i> Chat with TT Desk on WhatsApp (+91 7981793207)
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ROUTE DETAILS MODAL -->
+  <div class="modal-backdrop" id="routeModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeRouteModal()" aria-label="Close Itinerary Details">&times;</button>
+      <div class="modal-header">
+        <span class="pill-label">Verified Route Blueprint</span>
+        <h3 id="routeTitle">Route Title</h3>
+        <p class="modal-price" id="routeDuration">X Days</p>
+      </div>
+      <div style="margin: 1.5rem 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-dark);">
+        <p><strong>Primary Highway Circuit:</strong> <span id="routeCircuit"></span></p>
+        <p style="margin-top: 0.5rem;"><strong>Recommended Fleet Engine:</strong> <span id="routeMachine"></span></p>
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-light); border-radius: var(--radius-sm);">
+          <p><i class="fa-solid fa-circle-check" style="color: var(--emerald-teal);" aria-hidden="true"></i> Turnkey GPX route files & offline map coordinates provided</p>
+          <p><i class="fa-solid fa-circle-check" style="color: var(--emerald-teal);" aria-hidden="true"></i> Handpicked partner homestays with gated vehicle parking</p>
+          <p><i class="fa-solid fa-circle-check" style="color: var(--emerald-teal);" aria-hidden="true"></i> 24x7 Roadside emergency flatbed support active on this circuit</p>
+        </div>
+      </div>
+      <button class="btn-confirm" onclick="closeRouteModal(); switchView('page-fleet');">Pick A Vehicle For This Trail</button>
+    </div>
+  </div>
+
+  <!-- Master Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <div class="footer-logo-wrapper">
+          <img src="logo.png" alt="TT Tours and Travels Logo" class="footer-logo">
+        </div>
+        <p>TT Tours and Travels is a verified self-drive mobility provider dedicated to the spirit of adventure, road trips, and independent exploration across India.</p>
+        <div class="social-icons">
+          <a href="https://wa.me/917981793207" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          <a href="javascript:void(0)" aria-label="Visit Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+          <a href="javascript:void(0)" aria-label="Visit Facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+          <a href="javascript:void(0)" aria-label="Visit YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore Portals</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="switchView('landing-full')">Home (Full Scroll)</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-fleet')">Fleet & Pricing</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-trips')">Road Trips</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-policy')">Rental Policy</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-about')">About TT</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-contact')">Hubs & Contact</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-admin')" style="color: var(--adventure-orange); font-weight: 700;"><i class="fa-solid fa-lock"></i> Staff / Admin Portal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Top Vehicle Categories</h4>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="switchViewAndFilter('page-fleet', 'bike')">Superbikes & Cruisers</a></li>
+          <li><a href="javascript:void(0)" onclick="switchViewAndFilter('page-fleet', 'car')">4x4 Thar & Overland SUVs</a></li>
+          <li><a href="javascript:void(0)" onclick="switchViewAndFilter('page-fleet', 'bicycle')">Trek & MTB Trail Cycles</a></li>
+          <li><a href="javascript:void(0)" onclick="switchView('page-trips')">Himalayan Packages</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>24x7 Operations Desk</h4>
+        <p><i class="fa-solid fa-envelope" aria-hidden="true"></i> bookings@tttoursandtravels.com</p>
+        <p><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> +91 7981793207</p>
+        <p><i class="fa-solid fa-headset" aria-hidden="true"></i> Pan-India Roadside Emergency: 1800-TT-ROADS</p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 TT Tours and Travels (<a href="https://toursntrave.netlify.app/" style="color: var(--emerald-teal); text-decoration: none;">toursntrave.netlify.app</a>). All Rights Reserved. Crafted for independent riders & travellers across India.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

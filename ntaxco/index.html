@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nTAXco | Nizam's Tax Consultancy</title>
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- =========================================================
+     LOGIN VIEW
+========================================================== -->
+<div id="view-login">
+  <aside class="login-aside">
+    <div class="blob-field"><div class="blob b-blue b1"></div><div class="blob b-yellow b2"></div></div>
+
+    <div class="brand"><span class="logo-chip"><img src="logo.png" alt="nTAXco"></span></div>
+
+    <div class="pitch">
+      <span class="eyebrow">Established practice</span>
+      <h1>Every filing, every deadline, <em>accounted for.</em></h1>
+      <p>GST, income tax, company registration, bookkeeping and licensing — one consultancy, one point of contact, records kept the way they should be.</p>
+
+      <div class="login-stats">
+        <div><b>1,240+</b><span>Clients on record</span></div>
+        <div><b>16</b><span>In-house consultants</span></div>
+        <div><b>Anantapur</b><span>Registered office, AP</span></div>
+      </div>
+
+      <div class="live-pulse"><span class="dot"></span>Filings updating in real time</div>
+    </div>
+
+    <div class="foot">© 2026 nTAXco · Nizam's Tax Consultancy, Anantapur</div>
+  </aside>
+
+  <div class="login-main">
+    <div class="login-card">
+      <h2>Sign in to nTAXco</h2>
+      <p class="sub">Select your account type, then verify with a one-time code.</p>
+
+      <div class="role-tabs" role="tablist" aria-label="Account type">
+        <button class="role-tab active" data-role="customer" role="tab" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+          Customer
+        </button>
+        <button class="role-tab" data-role="employee" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Employee
+        </button>
+        <button class="role-tab" data-role="agent" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Agent
+        </button>
+        <button class="role-tab" data-role="superadmin" role="tab" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+          Super Admin
+        </button>
+      </div>
+
+      <!-- METHOD TOGGLE -->
+      <div class="method-tabs" id="methodTabs">
+        <button type="button" class="method-tab active" data-method="mobile">Mobile</button>
+        <button type="button" class="method-tab" data-method="email">Email</button>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="step-mobile">
+        <div class="field" id="mobileField">
+          <label for="mobileInput">Mobile number</label>
+          <div class="phone-input">
+            <span class="cc">+91</span>
+            <input type="tel" id="mobileInput" inputmode="numeric" placeholder="10-digit mobile number" maxlength="10">
+          </div>
+          <div class="field-msg">A 6-digit code will be sent to verify. Signing in as <b><span id="roleName">Customer</span></b>.</div>
+        </div>
+
+        <div class="field hidden" id="emailField">
+          <label for="emailInput">Email address</label>
+          <input type="email" id="emailInput" class="inp" placeholder="you@example.com" autocomplete="email">
+          <div class="field-msg">A 6-digit code will be sent to your email. Signing in as <b><span id="roleNameEmail">Customer</span></b>.</div>
+        </div>
+
+        <div class="otp-sending hidden" id="otpSendingRow"><span class="spinner"></span> Sending code…</div>
+        <div class="login-actions">
+          <button class="btn btn-yellow btn-block" id="sendOtpBtn" disabled>Send OTP</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: OTP -->
+      <div id="step-otp" class="hidden">
+        <div class="field">
+          <label>Enter the 6-digit code sent to <span id="otpTargetDisplay">+91 —</span></label>
+          <div class="otp-row" id="otpRow">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+            <input class="otp-box" type="tel" inputmode="numeric" maxlength="1">
+          </div>
+          <div class="field-msg error hidden" id="otpError"></div>
+          <div class="otp-meta">
+            <button type="button" id="resendBtn" disabled>Resend OTP (30s)</button>
+            <span id="otpTimerNote">Didn't get it?</span>
+          </div>
+        </div>
+
+        <div class="otp-demo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span><b>Trial mode</b> — no SMS / Email gateway is connected yet, so use the fixed test code <strong id="demoOtpValue">123456</strong> to sign in.</span>
+        </div>
+
+        <div class="login-actions">
+          <button class="btn btn-primary btn-block" id="verifyBtn" disabled>Verify &amp; Sign In</button>
+        </div>
+        <div class="back-link"><button type="button" id="changeNumberBtn">Change email / mobile</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     CUSTOMER LANDING APP
+========================================================== -->
+<div id="view-app">
+
+  <div class="topbar">
+    <div class="container">
+      <span>Mon–Sat 8:00 AM–9:00 PM · Sun 8:00 AM–2:00 PM</span>
+      <div class="topbar-right">
+        <a href="tel:+917013881808">📞 +91 70138 81808</a>
+        <a href="mailto:info@ntaxco.com">✉ info@ntaxco.com</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="#home" data-cust-nav="home"><img src="logo.png" alt="nTAXco"></a>
+      <nav class="main-nav" id="mainNav">
+        <a href="#home" data-cust-nav="home" class="active">Home</a>
+        <a href="#about" data-cust-nav="about">About</a>
+        <a href="#services" data-cust-nav="services">Services</a>
+        <a href="#offers" data-cust-nav="offers">Offers</a>
+        <a href="#contact" data-cust-nav="contact">Contact Us</a>
+      </nav>
+      <div class="header-right">
+        <div class="avatar-chip">
+          <span class="av" id="custAvatar">GC</span>
+          <span>
+            <span id="custMobile">+91 —</span>
+            <button class="js-logout" type="button">Logout</button>
+          </span>
+        </div>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="hero" id="home">
+    <div class="blob-field"><div class="blob b-blue b1"></div><div class="blob b-yellow b2"></div></div>
+    <div class="container">
+      <div>
+        <span class="eyebrow">Welcome back</span>
+        <h1>A single record of <span class="hi">every filing</span> we keep for you.</h1>
+        <p class="lead">You're signed in as a customer since <b id="custLoginTime">—</b>. From GST returns to company registration, your consultant is one enquiry away — not a ticket queue.</p>
+        <div class="cta-row">
+          <a href="#services" class="btn btn-primary">Browse Services</a>
+          <a href="#contact" class="btn btn-outline">Talk to a Consultant</a>
+        </div>
+        <div class="trust-row">
+          <div><b>1,240+</b><span>Clients on record</span></div>
+          <div><b>9+ yrs</b><span>In tax practice</span></div>
+          <div><b>100%</b><span>Online filing support</span></div>
+        </div>
+      </div>
+
+      <div class="receipt">
+        <h4><span class="dot"></span>Ledger — live this month</h4>
+        <div class="rline"><span>GST returns filed</span><b class="counter" data-target="312">0</b></div>
+        <div class="rline"><span>New registrations</span><b class="counter" data-target="27">0</b></div>
+        <div class="rline"><span>ITR filings in progress</span><b class="counter" data-target="96">0</b></div>
+        <div class="rline"><span>Avg. response time</span><b>&lt; 2 hrs</b></div>
+        <div class="rtotal"><span>Client satisfaction</span><span>4.9 / 5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-cust-home-only>
+    <div class="container">
+      <div class="feature-strip" data-reveal="stagger">
+        <div class="feature-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h3>On-time, by record</h3>
+          <p>GST, TDS and ITR due dates are tracked for you and filed ahead of the deadline, not against it.</p>
+        </div>
+        <div class="feature-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>A team of practitioners</h3>
+          <p>Experienced accountants and tax practitioners review every filing before it is submitted.</p>
+        </div>
+        <div class="feature-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+          <h3>Advice, not just filings</h3>
+          <p>Beyond compliance — considered guidance on structure, cash flow and tax planning.</p>
+        </div>
+        <div class="feature-card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg></div>
+          <h3>Compliance, handled</h3>
+          <p>Accounting and statutory compliance taken off your desk, so you can run the business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section-alt" id="about">
+    <div class="container about-grid">
+      <div class="about-photo" data-reveal>
+        <div class="blob-field"><div class="blob b-yellow"></div></div>
+        <div class="cap">"Available at any time, solving problems with ease." — a client, on working with Nizam</div>
+      </div>
+      <div class="about-copy" data-reveal>
+        <span class="eyebrow">About us</span>
+        <h2>A personal practice, kept to a professional standard</h2>
+        <p>nTAXco — Nizam's Tax Consultancy — is a tax, accounting and business-compliance practice based in Anantapur, Andhra Pradesh, working with small businesses, professionals and salaried individuals across India.</p>
+        <p>What began as one consultant's commitment to being reachable and dependable has grown into a full practice covering GST, income tax, company registration, bookkeeping and licensing — while keeping the same client-first, always-available approach the practice was built on.</p>
+        <ul class="about-list">
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Direct access to your consultant — not a ticket queue</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>End-to-end filing, from registration to renewal</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Transparent pricing, recorded in writing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">What we do</span>
+        <h2>Services we provide</h2>
+        <p>Covered end-to-end — from first registration to yearly renewal.</p>
+      </div>
+
+      <div class="svc-tabs">
+        <button class="svc-tab active" data-cat="all">All</button>
+        <button class="svc-tab" data-cat="gst">GST</button>
+        <button class="svc-tab" data-cat="tax">Income Tax</button>
+        <button class="svc-tab" data-cat="reg">Registrations</button>
+        <button class="svc-tab" data-cat="acc">Accounting</button>
+        <button class="svc-tab" data-cat="other">Other</button>
+      </div>
+
+      <div class="svc-grid" data-reveal="stagger">
+
+        <div class="svc-card" data-cat="gst" data-service="GST Registration & Returns">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&h=340&q=80" alt="GST registration and returns filing" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><path d="M18 2l4 4-9 9H9v-4l9-9z"/></svg></div>
+              <span class="tag">GST</span>
+            </div>
+            <h3>GST Registration &amp; Returns</h3>
+            <ul>
+              <li>GST registration (regular &amp; composition scheme)</li>
+              <li>Monthly / quarterly GST returns</li>
+              <li>ITC transfer &amp; reconciliation</li>
+              <li>GSTR-9 &amp; 9C annual filing</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="gst" data-service="GST Audits, Refunds & Notices">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&h=340&q=80" alt="GST audits, refunds and notice handling" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+              <span class="tag">GST</span>
+            </div>
+            <h3>GST Audits, Refunds &amp; Notices</h3>
+            <ul>
+              <li>GST audits &amp; cancellation</li>
+              <li>Refund claims</li>
+              <li>Reply to department notices</li>
+              <li>Other GST-related work</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="tax" data-service="Income Tax Returns">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1586486855514-8c633cc6fd38?auto=format&fit=crop&w=600&h=340&q=80" alt="Income tax return filing" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+              <span class="tag">Income Tax</span>
+            </div>
+            <h3>Income Tax Returns</h3>
+            <ul>
+              <li>Salaried employee ITR</li>
+              <li>Business &amp; professional income returns</li>
+              <li>Capital gains computation</li>
+              <li>Tax audits &amp; ROC filing</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="tax" data-service="Refunds & Tax Planning">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=600&h=340&q=80" alt="Tax planning and refunds" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <span class="tag">Income Tax</span>
+            </div>
+            <h3>Refunds &amp; Tax Planning</h3>
+            <ul>
+              <li>Refund claims &amp; rectifications</li>
+              <li>Advance tax planning</li>
+              <li>Notice &amp; scrutiny handling</li>
+              <li>Other income-tax related work</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="reg" data-service="Company & LLP Registration">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=600&h=340&q=80" alt="Company and LLP registration" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 9h1M9 13h1M14 9h1M14 13h1"/></svg></div>
+              <span class="tag">Registrations</span>
+            </div>
+            <h3>Company &amp; LLP Registration</h3>
+            <ul>
+              <li>Private Limited Company</li>
+              <li>Limited Liability Partnership (LLP)</li>
+              <li>One Person Company (OPC)</li>
+              <li>Director Identification Number (DIN) &amp; KYC</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="reg" data-service="Licenses & Statutory Registrations">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&h=340&q=80" alt="Licenses and statutory registrations" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              <span class="tag">Registrations</span>
+            </div>
+            <h3>Licenses &amp; Statutory Registrations</h3>
+            <ul>
+              <li>Partnership firm registration</li>
+              <li>MSME, EPF &amp; ESIC registration</li>
+              <li>Import &amp; Export Code (IEC)</li>
+              <li>Trade, food &amp; labor licenses</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="acc" data-service="Bookkeeping & Tally">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&h=340&q=80" alt="Bookkeeping and Tally accounting" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+              <span class="tag">Accounting</span>
+            </div>
+            <h3>Bookkeeping &amp; Tally</h3>
+            <ul>
+              <li>Account maintenance in Tally</li>
+              <li>Bank reconciliation statements</li>
+              <li>Accounts receivable &amp; payable</li>
+              <li>Financial reporting</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="acc" data-service="Payroll Management">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?auto=format&fit=crop&w=600&h=340&q=80" alt="Payroll management" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></div>
+              <span class="tag">Accounting</span>
+            </div>
+            <h3>Payroll Management</h3>
+            <ul>
+              <li>Monthly payroll processing</li>
+              <li>PF / ESI statutory deductions</li>
+              <li>Payslip generation</li>
+              <li>Stock reports</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-card" data-cat="other" data-service="Digital Signature & Certifications">
+          <div class="svc-media"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&h=340&q=80" alt="Digital signature and certification services" loading="lazy"></div>
+          <div class="svc-body">
+            <div class="tophead">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 2v4M17 2v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg></div>
+              <span class="tag">Other</span>
+            </div>
+            <h3>Digital Signature &amp; Certifications</h3>
+            <ul>
+              <li>Digital Signature Certificates (DSC)</li>
+              <li>PAN &amp; TAN services</li>
+              <li>Project reports &amp; turnover certificates</li>
+              <li>Business projections &amp; loan assistance</li>
+            </ul>
+            <div class="svc-actions">
+              <button type="button" class="btn btn-yellow btn-block js-apply-service">Apply / File Now</button>
+              <a href="#contact" class="enquire">Or just enquire first <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MY APPLICATIONS -->
+  <section class="section-alt" id="my-applications">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Track your filings</span>
+        <h2>My applications</h2>
+        <p>Everything you've filed with us, and where it stands right now.</p>
+      </div>
+      <div class="myapp-list" id="myAppList" data-reveal>
+        <div class="myapp-empty" id="myAppEmpty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p>You haven't filed anything yet. Pick a service above and hit <b>Apply / File Now</b> to get started — it only takes a couple of minutes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section class="section-alt" id="offers">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Plans</span>
+        <h2>Offers &amp; subscription plans</h2>
+        <p>Pick a plan that matches your filing frequency — or ask us to combine two.</p>
+      </div>
+      <div class="offer-grid" data-reveal="stagger">
+        <div class="offer-card">
+          <h3>Quarterly Subscription</h3>
+          <p class="offer-note">For businesses filing quarterly</p>
+          <ul>
+            <li>Quarterly GST filing</li>
+            <li>Basic bookkeeping review</li>
+            <li>Phone &amp; email support</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline btn-block">Get this plan</a>
+        </div>
+        <div class="offer-card highlight">
+          <span class="badge">Most popular</span>
+          <h3>GST + Income Tax Combo</h3>
+          <p class="offer-note">Everything in one subscription</p>
+          <ul>
+            <li>Monthly GST returns</li>
+            <li>Annual ITR filing</li>
+            <li>Priority consultant access</li>
+          </ul>
+          <a href="#contact" class="btn btn-yellow btn-block">Get this plan</a>
+        </div>
+        <div class="offer-card">
+          <h3>GST Half-Yearly Plan</h3>
+          <p class="offer-note">For low-transaction businesses</p>
+          <ul>
+            <li>Half-yearly GST filing</li>
+            <li>ITC reconciliation</li>
+            <li>Email support</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline btn-block">Get this plan</a>
+        </div>
+        <div class="offer-card">
+          <h3>GST Annual Subscription</h3>
+          <p class="offer-note">For simple, low-volume filers</p>
+          <ul>
+            <li>Annual GST return &amp; GSTR-9</li>
+            <li>One consultation call</li>
+            <li>Email support</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline btn-block">Get this plan</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section data-cust-home-only>
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Client stories</span>
+        <h2>What our clients say</h2>
+      </div>
+      <div class="testi-row" data-reveal="stagger">
+        <div class="testi-card">
+          <p class="quote">"Follows up well in advance so we're never rushing before a deadline — friendly, professional and flexible."</p>
+          <div class="who"><span class="av">RD</span><div><b>Ragadeep</b><span>Director, Entrivity Media</span></div></div>
+        </div>
+        <div class="testi-card">
+          <p class="quote">"Working together since 2017 — meticulous, accurate and always on time with both the small details and the big picture."</p>
+          <div class="who"><span class="av">LA</span><div><b>Lakshman Andra</b><span>Director, Vasudhaara Enterprises LLP</span></div></div>
+        </div>
+        <div class="testi-card">
+          <p class="quote">"Handled our GST filings and returns for two years running, always responsive and on time."</p>
+          <div class="who"><span class="av">SA</span><div><b>Shubam Agarwal</b><span>Lalitha Jewelry</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section-alt" id="contact">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Get in touch</span>
+        <h2>Contact us</h2>
+        <p>Tell us what you need — we'll call you back the same day.</p>
+      </div>
+      <div class="contact-wrap">
+        <div class="contact-info" data-reveal>
+          <div class="info-row">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><b>Office address</b><span>10/339-2, Sarojini Road, Near Kalinga Shopping Mall, Anantapur – 515001</span></div>
+          </div>
+          <div class="info-row">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+            <div><b>Phone</b><span>+91 70138 81808</span></div>
+          </div>
+          <div class="info-row">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></div>
+            <div><b>Email</b><span>info@ntaxco.com</span></div>
+          </div>
+          <div class="info-row">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><b>Working hours</b><span>Mon–Sat: 8:00 AM – 9:00 PM &nbsp;·&nbsp; Sun: 8:00 AM – 2:00 PM</span></div>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" data-reveal>
+          <div class="form-grid">
+            <div class="field full">
+              <label for="cf-name">Name</label>
+              <input class="inp" id="cf-name" type="text" placeholder="Your full name" required>
+            </div>
+            <div class="field">
+              <label for="cf-mobile">Mobile</label>
+              <input class="inp" id="cf-mobile" type="tel" placeholder="10-digit mobile" required>
+            </div>
+            <div class="field">
+              <label for="cf-email">Email</label>
+              <input class="inp" id="cf-email" type="email" placeholder="you@email.com">
+            </div>
+            <div class="field full">
+              <label for="cf-req">Requirement</label>
+              <select class="inp" id="cf-req">
+                <option>Private Limited Company Registration</option>
+                <option>Limited Liability Partnership (LLP)</option>
+                <option>Partnership Firm Registration</option>
+                <option>One Person Company</option>
+                <option>GST</option>
+                <option>Income Tax Returns</option>
+                <option>Digital Signature</option>
+                <option>Quarterly Subscription Plan</option>
+                <option>GST Half Yearly Plan</option>
+                <option>GST Annual Subscription</option>
+                <option>GST + Income Tax Combo</option>
+                <option>Registrations</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="cf-msg">Message</label>
+              <textarea class="inp" id="cf-msg" placeholder="Tell us a bit more about what you need"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Send Enquiry</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="brand">
+          <span class="logo-chip"><img src="logo.png" alt="nTAXco"></span>
+          <p>Tax, accounting and business compliance for growing businesses — GST, income tax, registrations and more, handled end to end.</p>
+          <div class="footer-social">
+            <a href="https://www.facebook.com/profile.php?id=61560987866870" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="https://x.com/NtaxCo" aria-label="X / Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
+            <a href="https://www.instagram.com/ntaxco/" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul class="footer-links">
+            <li><a href="#about" data-cust-nav="about">About Us</a></li>
+            <li><a href="#services" data-cust-nav="services">Our Services</a></li>
+            <li><a href="#offers" data-cust-nav="offers">Offers</a></li>
+            <li><a href="#contact" data-cust-nav="contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <ul class="footer-links">
+            <li><a href="#services" data-cust-nav="services">GST Filing</a></li>
+            <li><a href="#services" data-cust-nav="services">Income Tax Returns</a></li>
+            <li><a href="#services" data-cust-nav="services">Company Registration</a></li>
+            <li><a href="#services" data-cust-nav="services">Bookkeeping</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Reach us</h4>
+          <ul class="footer-links">
+            <li>10/339-2, Sarojini Road, Anantapur – 515001</li>
+            <li>+91 70138 81808</li>
+            <li>info@ntaxco.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 nTAXco · Nizam's Tax Consultancy. All rights reserved.</span>
+        <span>Built for nTAXco</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- =========================================================
+     STAFF / AGENT / SUPER ADMIN DASHBOARD
+========================================================== -->
+<div id="view-dashboard">
+  <div class="dash-shell">
+    <aside class="dash-side">
+      <div class="brand"><span class="logo-chip"><img src="logo.png" alt="nTAXco"></span></div>
+      <span class="role-pill" id="dashRolePill">Employee</span>
+      <nav class="dash-nav" id="dashNav"></nav>
+      <button class="logout-btn js-logout" type="button">Log out</button>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-top">
+        <div>
+          <h1 id="dashWelcome">Welcome back</h1>
+          <p id="dashSub">—</p>
+        </div>
+        <div class="avatar-chip">
+          <span class="av" id="dashAvatar">—</span>
+          <span>My Account</span>
+        </div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="dash-view" id="dashView-overview">
+        <div class="dash-cards" id="dashCards"></div>
+
+        <div class="dash-panel" id="liveAppsPanel">
+          <div class="dash-panel-head">
+            <h3 id="liveAppsTitle">Customer submissions</h3>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+          </div>
+          <p class="dash-panel-sub" id="liveAppsSub">Every service a customer files with us lands here the moment they submit it.</p>
+          <div id="liveAppsEmpty" class="myapp-empty small">
+            <p>No new customer submissions yet. As soon as a customer applies for a service, it'll show up here instantly.</p>
+          </div>
+          <div id="liveAppsList" class="app-list"></div>
+        </div>
+
+        <div class="dash-panel" id="liveEnquiriesPanel">
+          <div class="dash-panel-head">
+            <h3>New enquiries</h3>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+          </div>
+          <p class="dash-panel-sub">Contact-form enquiries from the public website, as they come in.</p>
+          <div id="liveEnquiriesEmpty" class="myapp-empty small">
+            <p>No new enquiries yet.</p>
+          </div>
+          <table class="dash-table" id="liveEnquiriesTable" style="display:none;">
+            <thead><tr><th>Name</th><th>Mobile</th><th>Requirement</th><th>Received</th></tr></thead>
+            <tbody id="liveEnquiriesBody"></tbody>
+          </table>
+        </div>
+
+        <div class="dash-panel">
+          <h3 id="dashPanelTitle">My assigned work</h3>
+          <table class="dash-table">
+            <thead><tr><th>Client</th><th>Task</th><th>Status</th></tr></thead>
+            <tbody id="dashTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ALL CUSTOMERS / ASSIGNED CLIENTS -->
+      <div class="dash-view hidden" id="dashView-customers">
+        <div class="dash-cards" id="customersCards"></div>
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3 id="customersTitle">All customers</h3></div>
+          <p class="dash-panel-sub">Built from live filings this session — in production this list comes straight from your customer database.</p>
+          <div id="customersEmpty" class="myapp-empty small"><p>No customers have filed anything yet this session.</p></div>
+          <table class="dash-table" id="customersTable" style="display:none;">
+            <thead><tr><th>Mobile</th><th>Filings</th><th>Last activity</th><th>Latest status</th></tr></thead>
+            <tbody id="customersBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EMPLOYEES ROSTER -->
+      <div class="dash-view hidden" id="dashView-employees">
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3>Employees</h3></div>
+          <p class="dash-panel-sub">In-house consultants — connect this to your HR/staff table for live headcount and workload.</p>
+          <table class="dash-table" id="employeesTable">
+            <thead><tr><th>Name</th><th>Role</th><th>Assigned clients</th><th>Status</th></tr></thead>
+            <tbody id="employeesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AGENTS ROSTER -->
+      <div class="dash-view hidden" id="dashView-agents">
+        <div id="adminAgentsRoot"></div>
+      </div>
+
+      <!-- FILINGS QUEUE / TASKS -->
+      <div class="dash-view hidden" id="dashView-filings">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <h3 id="filingsTitle">Filings queue</h3>
+            <span class="live-chip"><span class="dot"></span>Live</span>
+          </div>
+          <p class="dash-panel-sub">Every customer application, in one place, with full document checklists and status controls.</p>
+          <div id="filingsEmpty" class="myapp-empty small"><p>No filings yet. They'll appear here the moment a customer submits an application.</p></div>
+          <div id="filingsList" class="app-list"></div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="dash-view hidden" id="dashView-reports">
+        <div class="dash-cards" id="reportsCards"></div>
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3>Filings by status</h3></div>
+          <p class="dash-panel-sub">A quick breakdown of every filing submitted this session.</p>
+          <table class="dash-table" id="reportsTable">
+            <thead><tr><th>Status</th><th>Count</th></tr></thead>
+            <tbody id="reportsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="dash-view hidden" id="dashView-settings">
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3>Business settings</h3></div>
+          <p class="dash-panel-sub">Demo values shown below — wire this form up to your backend to make it editable.</p>
+          <div class="form-grid">
+            <div class="field"><label>Business name</label><input class="inp" value="Nizam's Tax Consultancy" disabled></div>
+            <div class="field"><label>Support phone</label><input class="inp" value="+91 70138 81808" disabled></div>
+            <div class="field"><label>Support email</label><input class="inp" value="info@ntaxco.com" disabled></div>
+            <div class="field"><label>Working hours</label><input class="inp" value="Mon–Sat 8AM–9PM, Sun 8AM–2PM" disabled></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div class="dash-view hidden" id="dashView-attendance">
+        <div id="attendanceRoot"></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="dash-view hidden" id="dashView-messages">
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3>Messages</h3></div>
+          <p class="dash-panel-sub">Internal messaging isn't wired up yet — this is a placeholder for your team chat / notifications feed.</p>
+          <div class="myapp-empty small"><p>No messages yet.</p></div>
+        </div>
+      </div>
+
+      <!-- LEADS / REFERRALS -->
+      <div class="dash-view hidden" id="dashView-leads">
+        <div id="agentLeadsRoot"></div>
+      </div>
+
+      <!-- AGENT: SUBMIT CLIENT FILING -->
+      <div class="dash-view hidden" id="dashView-agent-submit">
+        <div id="agentSubmitRoot"></div>
+      </div>
+
+      <!-- AGENT: MY SUBMISSIONS -->
+      <div class="dash-view hidden" id="dashView-agent-submissions">
+        <div id="agentSubmissionsRoot"></div>
+      </div>
+
+      <!-- AGENT: PROFILE -->
+      <div class="dash-view hidden" id="dashView-agent-profile">
+        <div id="agentProfileRoot"></div>
+      </div>
+
+      <!-- COMMISSION / PAYOUTS -->
+      <div class="dash-view hidden" id="dashView-commission">
+        <div class="dash-cards" id="commissionCards"></div>
+        <div class="dash-panel">
+          <div class="dash-panel-head"><h3>Payout history</h3></div>
+          <p class="dash-panel-sub">Demo data — connect this to your payouts ledger for real figures.</p>
+          <table class="dash-table">
+            <thead><tr><th>Month</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>July 2026</td><td>₹18,400</td><td><span class="status-pill done">Paid</span></td></tr>
+              <tr><td>June 2026</td><td>₹14,900</td><td><span class="status-pill done">Paid</span></td></tr>
+              <tr><td>August 2026 (so far)</td><td>₹4,200</td><td><span class="status-pill pending">Processing</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- =========================================================
+     AGENT ENROLLMENT
+========================================================== -->
+<div id="view-agent-enroll" class="hidden">
+  <div class="enroll-shell">
+    <aside class="enroll-aside">
+      <div class="brand"><span class="logo-chip"><img src="logo.png" alt="nTAXco"></span></div>
+      <span class="eyebrow">Partner program</span>
+      <h1>Join nTAXco as a <em>referral agent</em></h1>
+      <p>Refer clients for GST, income tax, company registration and more — submit their documents here and track every filing until it's done.</p>
+      <ul class="enroll-perks">
+        <li>Upload client ITR, GST &amp; registration files in one place</li>
+        <li>Track submission status in real time</li>
+        <li>Earn commission on every converted referral</li>
+      </ul>
+      <div class="foot">Admin reviews enrollments within 24–48 hours</div>
+    </aside>
+    <div class="enroll-main">
+      <div class="login-card enroll-card">
+        <h2>Agent enrollment</h2>
+        <p class="sub">Complete your profile. Once approved, you can start submitting client filings.</p>
+        <form id="agentEnrollForm">
+          <div class="form-grid">
+            <div class="field full"><label for="ae-name">Full name</label><input class="inp" id="ae-name" type="text" placeholder="Your full name" required></div>
+            <div class="field"><label for="ae-mobile">Mobile</label><input class="inp" id="ae-mobile" type="tel" readonly></div>
+            <div class="field"><label for="ae-email">Email</label><input class="inp" id="ae-email" type="email" placeholder="you@email.com" required></div>
+            <div class="field"><label for="ae-city">City</label><input class="inp" id="ae-city" type="text" placeholder="Anantapur" required></div>
+            <div class="field"><label for="ae-pan">PAN number</label><input class="inp" id="ae-pan" type="text" placeholder="ABCDE1234F" maxlength="10" required></div>
+            <div class="field full"><label for="ae-firm">Firm / business name (optional)</label><input class="inp" id="ae-firm" type="text" placeholder="If you operate under a firm name"></div>
+          </div>
+          <label class="enroll-check"><input type="checkbox" id="ae-agree" required> I confirm the details are correct and I agree to nTAXco's agent terms.</label>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Submit for approval</button>
+        </form>
+        <div class="back-link"><button type="button" class="js-logout">Back to sign in</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENT PENDING / REJECTED STATUS -->
+<div id="view-agent-status" class="hidden">
+  <div class="status-shell">
+    <div class="status-card">
+      <span class="logo-chip"><img src="logo.png" alt="nTAXco"></span>
+      <div id="agentStatusIcon" class="status-icon pending">⏳</div>
+      <h2 id="agentStatusTitle">Enrollment under review</h2>
+      <p id="agentStatusMsg">Your agent profile has been submitted. Our admin team will verify and activate your account within 24–48 hours.</p>
+      <div class="status-meta" id="agentStatusMeta"></div>
+      <div class="status-actions" id="agentStatusActions">
+        <button type="button" class="btn btn-outline js-logout">Sign out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     APPLY / FILE SERVICE MODAL
+========================================================== -->
+<div class="modal-overlay hidden" id="applyModalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+    <button type="button" class="modal-close" id="applyModalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <span class="tag" id="applyModalTag">GST</span>
+    <h2 id="applyModalTitle">Service name</h2>
+    <p class="sub">Follow the steps below — most applications are picked up by our team within a few hours.</p>
+
+    <div class="process-strip">
+      <div class="pstep"><span>1</span>Fill details &amp; upload docs</div>
+      <div class="pstep"><span>2</span>Team verifies</div>
+      <div class="pstep"><span>3</span>Filing prepared</div>
+      <div class="pstep"><span>4</span>Confirmation shared</div>
+    </div>
+
+    <div class="field">
+      <label>Documents required for this service</label>
+      <ul class="doc-checklist" id="applyDocChecklist"></ul>
+    </div>
+
+    <div class="field">
+      <label>Upload your documents</label>
+      <div class="upload-zone" id="uploadZone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p><b>Tap to upload</b> or use your camera to take a photo of each document</p>
+        <span class="hint">PDF, JPG or PNG — you can add more than one</span>
+        <input type="file" id="applyFileInput" accept="image/*,.pdf" capture="environment" multiple>
+      </div>
+      <div class="file-chips" id="fileChips"></div>
+      <div class="field-msg error hidden" id="applyFileError">Please attach at least one document before submitting.</div>
+    </div>
+
+    <div class="field">
+      <label for="applyNotes">Anything else we should know? (optional)</label>
+      <textarea class="inp" id="applyNotes" placeholder="E.g. preferred callback time, specific concern, etc."></textarea>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-block" id="applySubmitBtn">Submit application</button>
+  </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"><span class="dot"></span><span class="msg"></span></div>
+
+<script src="script.js"></script>
+</body>
+</html>

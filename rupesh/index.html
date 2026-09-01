@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Fun Learning Planet</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2F3E46;
+            --bg-color: #F7FFF7;
+            --danger: #FF4136;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--dark);
+        }
+
+        header {
+            background-color: var(--primary);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+            margin-top: 10px;
+        }
+
+        button {
+            font-family: inherit;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        .btn-kids { background-color: var(--secondary); color: white; margin-right: 10px;}
+        .btn-admin { background-color: var(--accent); color: var(--dark); }
+        .btn-submit { background-color: var(--secondary); color: white; width: 100%; margin-top: 15px; font-size: 18px;}
+        .btn-download { background-color: var(--primary); color: white; font-size: 14px; padding: 8px 16px; margin-top: 10px;}
+        .btn-delete { background-color: var(--danger); color: white; font-size: 14px; padding: 6px 14px; border-radius: 15px; margin-top: 15px;}
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Views configuration */
+        .view { display: none; }
+        .active-view { display: block; }
+
+        /* Admin Box Styling */
+        .admin-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px dashed var(--primary);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 18px;}
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 3px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        input[type="file"] {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 2px dashed #ccc;
+        }
+
+        /* Kids Board Grid Styling */
+        .kids-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border: 4px solid var(--secondary);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .lesson-icon { font-size: 55px; margin: 0; }
+        .lesson-title { color: var(--primary); margin: 10px 0; font-size: 22px; }
+        .lesson-content { font-size: 16px; line-height: 1.5; color: #555; margin-bottom: 15px;}
+        
+        /* Attachment Preview Styling */
+        .preview-box {
+            width: 100%;
+            margin-top: 10px;
+            border-top: 1px dashed #ddd;
+            padding-top: 10px;
+        }
+        
+        .preview-img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .file-link-icon {
+            font-size: 40px;
+            margin: 5px 0;
+        }
+
+        .no-lessons {
+            text-align: center;
+            grid-column: 1 / -1;
+            color: #aaa;
+            font-size: 22px;
+            padding: 40px;
+        }
+
+        .admin-manage-section {
+            margin-top: 20px;
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎒 Kids Learning Planet 🚀</h1>
+        <div class="nav-buttons">
+            <button class="btn-kids" onclick="switchView('kids')">👦 Kids Zone</button>
+            <button class="btn-admin" onclick="switchView('admin')">⚙️ Teacher Admin</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div id="kids-view" class="view active-view">
+            <h2>Let's Learn and Gain Knowledge! 👇</h2>
+            <div id="kids-grid" class="kids-grid"></div>
+        </div>
+
+        <div id="admin-view" class="view">
+            <div class="admin-box">
+                <h2>📢 Teacher Dashboard</h2>
+                <form id="lesson-form">
+                    <div class="form-group">
+                        <label for="title">Lesson Title / Topic:</label>
+                        <input type="text" id="title" placeholder="e.g., Inside the Volcano" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">Description or Text Details:</label>
+                        <textarea id="content" rows="3" placeholder="Explain the concept simply here..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="file-upload">Upload a File or Document (Image, PDF, TXT, etc.):</label>
+                        <input type="file" id="file-upload" accept="image/*, .pdf, .txt, .doc, .docx">
+                        <small style="color: #666; display:block; margin-top:5px;">Kids will be able to see or download this file directly! (Supports big files now!)</small>
+                    </div>
+
+                    <button type="submit" class="btn-submit">🌟 Publish to Kids Zone</button>
+                </form>
+            </div>
+
+            <div class="admin-manage-section">
+                <h2>🗑️ Manage Current Lessons</h2>
+                <div id="admin-grid" class="kids-grid"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "teacher123";
+        let db;
+        let lessons = [];
+
+        // 1. Initialize IndexedDB Database
+        const request = indexedDB.open("KidsLearningPlanetDB", 1);
+
+        request.onupgradeneeded = function(event) {
+            db = event.target.result;
+            // Create an object store with an auto-incrementing key (id)
+            const objectStore = db.createObjectStore("lessons", { keyPath: "id", autoIncrement: true });
+            
+            // Starter lessons injected on database creation
+            const initialLessons = [
+                { title: "A is for Apple", content: "Apples are crisp and packed with vitamins!", fileData: "", fileName: "", fileType: "" },
+                { title: "The Blue Whale", content: "They are larger than any dinosaur ever recorded!", fileData: "", fileName: "", fileType: "" }
+            ];
+            initialLessons.forEach(lesson => objectStore.add(lesson));
+        };
+
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            // Fetch everything from DB on initial load
+            loadLessonsFromDB(renderKidsLessons);
+        };
+
+        request.onerror = function(event) {
+            console.error("IndexedDB Database error: " + event.target.errorCode);
+            alert("Database failed to load. Storage may not work properly.");
+        };
+
+        // 2. Database Action Operations
+        function loadLessonsFromDB(callback) {
+            const transaction = db.transaction(["lessons"], "readonly");
+            const objectStore = transaction.objectStore("lessons");
+            const getAllRequest = objectStore.getAll();
+
+            getAllRequest.onsuccess = function() {
+                lessons = getAllRequest.result;
+                if (callback) callback();
+            };
+        }
+
+        function addLessonToDB(newLesson) {
+            const transaction = db.transaction(["lessons"], "readwrite");
+            const objectStore = transaction.objectStore("lessons");
+            const addRequest = objectStore.add(newLesson);
+
+            addRequest.onsuccess = function() {
+                loadLessonsFromDB(() => {
+                    document.getElementById('lesson-form').reset();
+                    alert("✨ Awesome! Your file and text have been added safely to the Kids Zone!");
+                    switchView('kids');
+                });
+            };
+        }
+
+        function deleteLessonFromDB(id) {
+            const transaction = db.transaction(["lessons"], "readwrite");
+            const objectStore = transaction.objectStore("lessons");
+            const deleteRequest = objectStore.delete(id);
+
+            deleteRequest.onsuccess = function() {
+                loadLessonsFromDB(renderAdminLessons);
+                alert("🗑️ Lesson removed successfully!");
+            };
+        }
+
+        // 3. Application View Controller
+        function switchView(viewName) {
+            if(viewName === 'admin') {
+                let passwordAttempt = prompt("🔒 Access Restricted! Please enter the Teacher Password:");
+                if (passwordAttempt === null) return;
+                
+                if (passwordAttempt !== ADMIN_PASSWORD) {
+                    alert("❌ Incorrect Password! Kids belong in the Kids Zone! 😉");
+                    switchView('kids');
+                    return;
+                }
+                renderAdminLessons();
+            }
+
+            document.getElementById('kids-view').classList.remove('active-view');
+            document.getElementById('admin-view').classList.remove('active-view');
+            
+            if(viewName === 'kids') {
+                renderKidsLessons();
+                document.getElementById('kids-view').classList.add('active-view');
+            } else {
+                document.getElementById('admin-view').classList.add('active-view');
+            }
+        }
+
+        // Card Content Engine
+        function createCardContent(lesson) {
+            let fileHTML = '';
+            let cardIcon = '📝';
+
+            if(lesson.fileData) {
+                if(lesson.fileType.startsWith('image/')) {
+                    cardIcon = '🖼️';
+                    fileHTML = `
+                        <div class="preview-box">
+                            <img src="${lesson.fileData}" class="preview-img" alt="Uploaded Material">
+                        </div>
+                    `;
+                } else {
+                    cardIcon = '📁';
+                    fileHTML = `
+                        <div class="preview-box">
+                            <div class="file-link-icon">📄</div>
+                            <span style="font-size:12px; word-break:break-all;">${lesson.fileName}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            return `
+                <div>
+                    <p class="lesson-icon">${cardIcon}</p>
+                    <h3 class="lesson-title">${lesson.title}</h3>
+                    <p class="lesson-content">${lesson.content}</p>
+                </div>
+                ${fileHTML}
+            `;
+        }
+
+        function renderKidsLessons() {
+            const grid = document.getElementById('kids-grid');
+            grid.innerHTML = ""; 
+
+            if(lessons.length === 0) {
+                grid.innerHTML = `<p class="no-lessons">No lessons yet! Time for the teacher to log in and upload files.</p>`;
+                return;
+            }
+
+            lessons.forEach(lesson => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                
+                let baseContent = createCardContent(lesson);
+                if(lesson.fileData) {
+                    baseContent += `
+                        <a href="${lesson.fileData}" download="${lesson.fileName}">
+                            <button class="btn-download">💾 Open File</button>
+                        </a>
+                    `;
+                }
+
+                card.innerHTML = baseContent;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderAdminLessons() {
+            const adminGrid = document.getElementById('admin-grid');
+            adminGrid.innerHTML = "";
+
+            if(lessons.length === 0) {
+                adminGrid.innerHTML = `<p class="no-lessons">No active lessons right now.</p>`;
+                return;
+            }
+
+            lessons.forEach((lesson) => {
+                const card = document.createElement('div');
+                card.className = 'lesson-card';
+                
+                let baseContent = createCardContent(lesson);
+                // Tie deletion to database unique tracking id
+                baseContent += `<button class="btn-delete" onclick="triggerDelete(${lesson.id}, '${lesson.title}')">🗑️ Delete Lesson</button>`;
+
+                card.innerHTML = baseContent;
+                adminGrid.appendChild(card);
+            });
+        }
+
+        function triggerDelete(id, title) {
+            const confirmDelete = confirm(`Are you sure you want to delete "${title}"?`);
+            if (confirmDelete) {
+                deleteLessonFromDB(id);
+            }
+        }
+
+        // Form processing listener
+        document.getElementById('lesson-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const fileInput = document.getElementById('file-upload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    addLessonToDB({
+                        title: title,
+                        content: content,
+                        fileData: event.target.result,
+                        fileName: file.name,
+                        fileType: file.type
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                addLessonToDB({
+                    title: title,
+                    content: content,
+                    fileData: "",
+                    fileName: "",
+                    fileType: ""
+                });
+            }
+        });
+    </script>
+</body>
+</html>

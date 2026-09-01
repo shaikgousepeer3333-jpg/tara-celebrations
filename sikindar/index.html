@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strivenest Technologies | Enterprise Web Solutions</title>
+    <style>
+        /* Modern Design System Tokens */
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --whatsapp: #25D366;
+            --instagram: #E1306C;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Fixed Navigation Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--primary);
+            background-color: rgba(2, 132, 199, 0.08);
+        }
+
+        .phone-link {
+            color: var(--secondary);
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1.5rem;
+        }
+
+        .phone-link:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content Wrapper */
+        main {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Base Content Section Layout */
+        .content-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid #e2e8f0;
+            opacity: 1;
+            transition: var(--transition);
+        }
+
+        .content-section.hidden {
+            display: none !important;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            font-size: 1.1rem;
+        }
+
+        /* Hero Block */
+        #hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+            padding: 8rem 2rem;
+            max-width: 100%;
+        }
+
+        #hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        #hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .cta-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Grids & Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .img-tech-1 { background: linear-gradient(45deg, #0f172a, #0284c7, #1e1b4b); }
+        .img-tech-2 { background: linear-gradient(135deg, #1e293b, #4f46e5, #0f172a); }
+        .img-tech-3 { background: linear-gradient(225deg, #0f172a, #06b6d4, #111827); }
+        
+        .img-portfolio-1 { background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80'); }
+        .img-portfolio-2 { background-image: url('https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=800&q=80'); }
+
+        .card-image::after {
+            content: "LIVE PRODUCTION STACK";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(2, 132, 199, 0.85);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .card-content {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            font-size: 1.3rem;
+        }
+
+        /* Feedback/Testimonials */
+        .feedback-card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .quote-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            font-style: italic;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .quote-text::before {
+            content: "“";
+            font-size: 4rem;
+            color: rgba(2, 132, 199, 0.15);
+            position: absolute;
+            top: -2.5rem;
+            left: -1rem;
+        }
+
+        .client-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, #0369a1);
+        }
+        .avatar-2 { background: linear-gradient(135deg, #818cf8, #4338ca); }
+        .avatar-3 { background: linear-gradient(135deg, #2dd4bf, #0f766e); }
+
+        .client-info h4 {
+            color: var(--secondary);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .client-info p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Contact Layout */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .social-matrix {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .social-tile {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+
+        .social-tile:hover {
+            transform: translateX(8px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+
+        .social-tile.wa-tile:hover { border-color: var(--whatsapp); background: rgba(37, 211, 102, 0.03); }
+        .social-tile.ig-tile:hover { border-color: var(--instagram); background: rgba(225, 48, 108, 0.03); }
+
+        .tile-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .wa-bg { background: var(--whatsapp); }
+        .ig-bg { background: var(--instagram); }
+
+        .tile-meta h4 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+        .tile-meta p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .contact-container {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .phone-box {
+            text-align: center;
+            background: rgba(2, 132, 199, 0.05);
+            border: 1px dashed var(--primary);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .phone-box h4 { color: var(--secondary); margin-bottom: 0.25rem; }
+        .phone-box a { font-size: 1.8rem; font-weight: 800; color: var(--primary); text-decoration: none; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+
+        /* Floating Action Dock */
+        .floating-action-dock {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 2000;
+        }
+
+        .dock-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .dock-btn:hover {
+            transform: scale(1.1) translateY(-4px);
+        }
+
+        .dock-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        footer {
+            background: var(--secondary);
+            color: #94a3b8;
+            text-align: center;
+            padding: 2.5rem 2rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .footer-socials a {
+            color: #64748b;
+            transition: var(--transition);
+        }
+
+        .footer-socials a:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+            .nav-container { flex-direction: column; gap: 1rem; }
+            .nav-right { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-action-dock">
+        <a href="https://wa.me/message/NFWZRL22GZJVB1" target="_blank" class="dock-btn wa-bg" title="Chat on WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4.011 12.008.011c3.201.001 6.212 1.244 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.628 1.936 14.162.914 11.53.914c-5.44 0-9.866 4.372-9.87 9.802 0 1.698.459 3.354 1.327 4.866l-.993 3.63 3.713-.974zm13.004-6.92c-.226-.113-1.332-.656-1.54-.732-.207-.075-.359-.112-.509.112-.15.225-.579.731-.711.881-.13.15-.26.168-.486.055-.225-.113-.954-.352-1.817-1.122-.67-.598-1.122-1.336-1.254-1.562-.132-.225-.014-.347.099-.46c.102-.102.226-.263.338-.394.113-.132.15-.226.226-.376.075-.15.038-.282-.019-.395-.056-.113-.509-1.226-.698-1.682-.183-.443-.369-.383-.509-.39-.131-.006-.282-.007-.433-.007s-.396.056-.604.282c-.207.225-.792.773-.792 1.884s.81 2.184.922 2.334c.113.15 1.594 2.434 3.862 3.415.54.234 1.05.374 1.449.5.54.172 1.03.147 1.417.09.431-.064 1.332-.544 1.52-.107.187-.537.187-.997.132-1.076z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/gouse_e_sultan?igsh=MW5sN2hiZXJqczg1dg==" target="_blank" class="dock-btn ig-bg" title="Follow on Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+    </div>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="switchTab('home')">Strivenest<span>Technologies</span></a>
+            <div class="nav-right">
+                <nav id="main-nav">
+                    <button class="nav-btn active" onclick="switchTab('home')">Home</button>
+                    <button class="nav-btn" onclick="switchTab('services')">Services</button>
+                    <button class="nav-btn" onclick="switchTab('portfolio')">Portfolio</button>
+                    <button class="nav-btn" onclick="switchTab('feedback')">Feedback</button>
+                    <button class="nav-btn" onclick="switchTab('about')">About</button>
+                    <button class="nav-btn" onclick="switchTab('contact')">Contact</button>
+                </nav>
+                <a href="tel:8331088042" class="phone-link">📞 833-108-8042</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+        <section id="hero" class="content-section">
+            <h1>We Engineer Scalable Web Solutions</h1>
+            <p>Custom software architectures, dynamic single-page engines, and enterprise frameworks built by Strivenest Technologies to optimize your digital presence.</p>
+            <button class="cta-btn" onclick="switchTab('contact')">Connect With An Engineer</button>
+        </section>
+
+        <section id="services" class="content-section">
+            <h2>Our Core Competencies</h2>
+            <p class="section-desc">Tailored technical solutions engineered to optimize security, application responsiveness, and processing speed.</p>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-image img-tech-1"></div>
+                    <div class="card-content">
+                        <h3>Enterprise Systems</h3>
+                        <p>High-security web platforms and workflows built to streamline backend operational complexity cleanly.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image img-tech-2"></div>
+                    <div class="card-content">
+                        <h3>API Implementations</h3>
+                        <p>Reliable integrations connecting microservices dynamically while preserving critical data integrity.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image img-tech-3"></div>
+                    <div class="card-content">
+                        <h3>UI/UX Modernization</h3>
+                        <p>Transforming complex legacy interfaces into fluid, elegant single-page setups optimized for target conversions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="content-section">
+            <h2>Proven Solutions Architecture</h2>
+            <p class="section-desc">A snapshot of data architectures engineered, scaled, and managed globally by our technical division.</p>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-image img-portfolio-1"></div>
+                    <div class="card-content">
+                        <h3>Data Sync Routing Suite</h3>
+                        <p>A multi-tenant database grid handling telemetry feeds with seamless high-availability clustering constraints.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image img-portfolio-2"></div>
+                    <div class="card-content">
+                        <h3>SaaS Transaction Hub</h3>
+                        <p>A robust cloud payment framework processing merchant configurations safely and natively across distributed nodes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="feedback" class="content-section">
+            <h2>Client Insights & Feedback</h2>
+            <p class="section-desc">What enterprise engineering leads and directors say about collaborating with Strivenest Technologies.</p>
+            <div class="grid">
+                <div class="feedback-card">
+                    <p class="quote-text">Strivenest completely refactored our legacy inventory management system into a modular, single-page system. Operational speed went up by almost 40% and data conflicts dropped to absolute zero.</p>
+                    <div class="client-profile">
+                        <div class="avatar"></div>
+                        <div class="client-info">
+                            <h4>Sarah Jenkins</h4>
+                            <p>VP of Operations, NextCore Logistics</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback-card">
+                    <p class="quote-text">Their understanding of microservice architectures is exceptional. The dynamic data routing system they engineered seamlessly connects our globally distributed merchant databases.</p>
+                    <div class="client-profile">
+                        <div class="avatar avatar-2"></div>
+                        <div class="client-info">
+                            <h4>Marcus Vance</h4>
+                            <p>Chief Technology Officer, FinVerge Global</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="feedback-card">
+                    <p class="quote-text">We required a completely custom web dashboard within an aggressive production timeline. Strivenest delivered an exceptionally clean stack that handled load stress out of the box.</p>
+                    <div class="client-profile">
+                        <div class="avatar avatar-3"></div>
+                        <div class="client-info">
+                            <h4>Elena Rostova</h4>
+                            <p>Head of Digital Product, Arca Media Group</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <h2>The Strivenest Standard</h2>
+            <p class="section-desc">We bridge systems engineering with focused business logic to push your products to deployment quickly.</p>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-main);">Founded by systems designers and application developers, Strivenest Technologies specializes in building custom digital frameworks. We write clean, optimized code structured to address specific enterprise requirements.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section">
+            <h2>Initialize Your Framework</h2>
+            <p class="section-desc">Ready to scale your architecture? Reach out to Strivenest Technologies directly through our high-speed network nodes.</p>
+            
+            <div class="contact-layout">
+                <div class="social-matrix">
+                    <div class="phone-box">
+                        <h4>Direct Engineering Line</h4>
+                        <a href="tel:8331088042">833-108-8042</a>
+                    </div>
+
+                    <a href="https://wa.me/message/NFWZRL22GZJVB1" target="_blank" class="social-tile wa-tile">
+                        <div class="tile-icon wa-bg">
+                            <svg style="width:24px;height:24px;fill:white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.4.011 12.008.011c3.201.001 6.212 1.244 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.628 1.936 14.162.914 11.53.914c-5.44 0-9.866 4.372-9.87 9.802 0 1.698.459 3.354 1.327 4.866l-.993 3.63 3.713-.974zm13.004-6.92c-.226-.113-1.332-.656-1.54-.732-.207-.075-.359-.112-.509.112-.15.225-.579.731-.711.881-.13.15-.26.168-.486.055-.225-.113-.954-.352-1.817-1.122-.67-.598-1.122-1.336-1.254-1.562-.132-.225-.014-.347.099-.46c.102-.102.226-.263.338-.394.113-.132.15-.226.226-.376.075-.15.038-.282-.019-.395-.056-.113-.509-1.226-.698-1.682-.183-.443-.369-.383-.509-.39-.131-.006-.282-.007-.433-.007s-.396.056-.604.282c-.207.225-.792.773-.792 1.884s.81 2.184.922 2.334c.113.15 1.594 2.434 3.862 3.415.54.234 1.05.374 1.449.5.54.172 1.03.147 1.417.09.431-.064 1.332-.544 1.52-.107.187-.537.187-.997.132-1.076z"/></svg>
+                        </div>
+                        <div class="tile-meta">
+                            <h4>WhatsApp Instant Sync</h4>
+                            <p>One-click system architecture alignment</p>
+                        </div>
+                    </a>
+
+                    <a href="https://www.instagram.com/gouse_e_sultan?igsh=MW5sN2hiZXJqczg1dg==" target="_blank" class="social-tile ig-tile">
+                        <div class="tile-icon ig-bg">
+                            <svg style="width:24px;height:24px;fill:white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </div>
+                        <div class="tile-meta">
+                            <h4>Instagram Portfolio Feed</h4>
+                            <p>Visual system design updates & logs</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="contact-container">
+                    <form id="contactForm" onsubmit="handleFormSubmission(event)">
+                        <div class="form-group">
+                            <label for="name">Your Name / Company Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Gousepeer / Strivenest LLC">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="name@domain.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="msg">Project Details & Feedback</label>
+                            <textarea id="msg" name="message" rows="5" required placeholder="Type the project scope or website feedback you want to send to management..."></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn" class="cta-btn" style="width: 100%;">Transmit Project Scope</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Strivenest Technologies. All systems operational.</p>
+        <div class="footer-socials">
+            <a href="https://wa.me/message/NFWZRL22GZJVB1" target="_blank">WhatsApp Direct</a>
+            <a href="https://www.instagram.com/gouse_e_sultan?igsh=MW5sN2hiZXJqczg1dg==" target="_blank">Instagram Profile</a>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(targetTabId) {
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.nav-btn');
+
+            // Remove active style state from all buttons
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            if (targetTabId === 'home') {
+                // Show every section cleanly when navigating to home page view
+                sections.forEach(section => section.classList.remove('hidden'));
+                
+                const homeBtn = document.querySelector(`button[onclick="switchTab('home')"]`);
+                if(homeBtn) homeBtn.classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Hide non-relevant views and reveal target element view accurately
+                sections.forEach(section => {
+                    if (section.id === targetTabId) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden'); // Fixed typo here (added .classList)
+                    }
+                });
+                
+                const activeBtn = document.querySelector(`button[onclick="switchTab('${targetTabId}')"]`);
+                if(activeBtn) activeBtn.classList.add('active');
+                
+                window.scrollTo({ top: 0 });
+            }
+        }
+
+        // BACKEND ROUTING: Sends data silently without opening separate windows/apps
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            
+            const submitButton = document.getElementById('submitBtn');
+            const form = document.getElementById('contactForm');
+            
+            // Change button visual state during background transfer
+            submitButton.innerText = "Transmitting Data...";
+            submitButton.style.backgroundColor = "#64748b";
+            submitButton.disabled = true;
+
+            // Prepare payload
+            const formData = new FormData(form);
+
+            // FORMSPREE ENDPOINT KEY
+            fetch('https://formspree.io/f/mpqeojqj', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('✨ Requirements captured cleanly! Our design division will contact you shortly.');
+                    form.reset(); // Clear text inputs automatically
+                } else {
+                    alert('⚠️ Transmission delay encountered. Please try again or use direct WhatsApp routing.');
+                }
+            })
+            .catch(error => {
+                alert('⚠️ Network connection dropped. Check your connection parameters.');
+            })
+            .finally(() => {
+                // Reset button back to standard system layout
+                submitButton.innerText = "Transmit Project Scope";
+                submitButton.style.backgroundColor = "var(--primary)";
+                submitButton.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
