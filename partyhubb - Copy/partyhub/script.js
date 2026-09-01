@@ -1223,7 +1223,7 @@ function initBookingForm() {
      ------------------------------- */
 
   const API_URL =
-    'http://localhost:5000/api/bookings';
+    'https://tara-celebrations.onrender.com/api/bookings';
 
   const FORMSPREE_URL =
     'https://formspree.io/f/mpqeojqj';

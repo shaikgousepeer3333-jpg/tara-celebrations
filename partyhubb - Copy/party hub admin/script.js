@@ -21,7 +21,7 @@ const PH_CHANNEL =
 // CLEAN MONGODB VERSION
 // ==========================================
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://tara-celebrations.onrender.com/api";
 
 const AUTH_KEY = "ph_admin_pass";
 const SESSION_KEY = "ph_admin_session";
