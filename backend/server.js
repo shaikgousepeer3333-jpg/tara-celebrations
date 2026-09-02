@@ -24,24 +24,35 @@ const PORT = process.env.PORT || 5000;
 // ==========================================
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+
+app.use(
+    express.json({
+        limit: "10mb"
+    })
+);
 
 
 // ==========================================
 // MONGODB CONNECTION
 // ==========================================
 
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    console.error("❌ MONGODB_URI is not defined in .env");
+    process.exit(1);
+}
+
 mongoose
-    mongoose
-    .connect("mongodb+srv://shaikgousepeer3333_db_user:PartyHub2026Test@partyhub.4rbzwo8.mongodb.net/?appName=PartyHub", {
+    .connect(MONGODB_URI, {
         serverSelectionTimeoutMS: 10000
     })
     .then(() => {
-        console.log("MongoDB connected successfully!");
+        console.log("✅ MongoDB connected successfully!");
     })
     .catch((error) => {
         console.error(
-            "MongoDB connection failed:",
+            "❌ MongoDB connection failed:",
             error.message
         );
     });
@@ -54,6 +65,7 @@ mongoose
 
 // ------------------------------------------
 // CREATE BOOKING
+// POST /api/bookings
 // ------------------------------------------
 
 app.post("/api/bookings", async (req, res) => {
@@ -62,6 +74,11 @@ app.post("/api/bookings", async (req, res) => {
         const booking = new Booking(req.body);
 
         await booking.save();
+
+        console.log(
+            "✅ Booking saved:",
+            booking.id
+        );
 
         res.status(201).json({
             success: true,
@@ -72,7 +89,7 @@ app.post("/api/bookings", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Booking save failed:",
+            "❌ Booking save failed:",
             error.message
         );
 
@@ -87,6 +104,7 @@ app.post("/api/bookings", async (req, res) => {
 
 // ------------------------------------------
 // GET ALL BOOKINGS
+// GET /api/bookings
 // ------------------------------------------
 
 app.get("/api/bookings", async (req, res) => {
@@ -94,7 +112,9 @@ app.get("/api/bookings", async (req, res) => {
 
         const bookings = await Booking
             .find()
-            .sort({ createdAt: -1 });
+            .sort({
+                createdAt: -1
+            });
 
         res.json({
             success: true,
@@ -104,7 +124,7 @@ app.get("/api/bookings", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Failed to get bookings:",
+            "❌ Failed to get bookings:",
             error.message
         );
 
@@ -119,6 +139,7 @@ app.get("/api/bookings", async (req, res) => {
 
 // ------------------------------------------
 // GET ONE BOOKING
+// GET /api/bookings/:id
 // ------------------------------------------
 
 app.get("/api/bookings/:id", async (req, res) => {
@@ -144,7 +165,7 @@ app.get("/api/bookings/:id", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Failed to get booking:",
+            "❌ Failed to get booking:",
             error.message
         );
 
@@ -157,9 +178,12 @@ app.get("/api/bookings/:id", async (req, res) => {
 });
 
 
+// ==========================================
+// UPDATE BOOKING STATUS
+// ==========================================
+
+
 // ------------------------------------------
-// UPDATE BOOKING
-// Supports:
 // PATCH /api/bookings/:id
 // PATCH /api/bookings/:id/status
 // ------------------------------------------
@@ -170,6 +194,10 @@ async function updateBookingStatus(req, res) {
 
         const { status } = req.body;
 
+        // --------------------------------------
+        // CHECK STATUS
+        // --------------------------------------
+
         if (!status) {
 
             return res.status(400).json({
@@ -177,6 +205,11 @@ async function updateBookingStatus(req, res) {
                 message: "Status is required"
             });
         }
+
+
+        // --------------------------------------
+        // ALLOWED STATUSES
+        // --------------------------------------
 
         const allowedStatuses = [
             "Pending",
@@ -194,19 +227,29 @@ async function updateBookingStatus(req, res) {
             });
         }
 
+
+        // --------------------------------------
+        // UPDATE BOOKING
+        // --------------------------------------
+
         const booking =
             await Booking.findOneAndUpdate(
                 {
                     id: req.params.id
                 },
                 {
-                    status
+                    status: status
                 },
                 {
                     new: true,
                     runValidators: true
                 }
             );
+
+
+        // --------------------------------------
+        // BOOKING NOT FOUND
+        // --------------------------------------
 
         if (!booking) {
 
@@ -215,6 +258,16 @@ async function updateBookingStatus(req, res) {
                 message: "Booking not found"
             });
         }
+
+
+        console.log(
+            `✅ Booking ${booking.id} status changed to ${status}`
+        );
+
+
+        // --------------------------------------
+        // RESPONSE
+        // --------------------------------------
 
         res.json({
             success: true,
@@ -226,7 +279,7 @@ async function updateBookingStatus(req, res) {
     } catch (error) {
 
         console.error(
-            "Booking status update failed:",
+            "❌ Booking status update failed:",
             error.message
         );
 
@@ -240,14 +293,20 @@ async function updateBookingStatus(req, res) {
 }
 
 
-// Admin JS uses PATCH /api/bookings/:id
+// ------------------------------------------
+// PATCH BOOKING
+// ------------------------------------------
+
 app.patch(
     "/api/bookings/:id",
     updateBookingStatus
 );
 
 
-// Also support /status
+// ------------------------------------------
+// PATCH BOOKING STATUS
+// ------------------------------------------
+
 app.patch(
     "/api/bookings/:id/status",
     updateBookingStatus
@@ -256,6 +315,7 @@ app.patch(
 
 // ------------------------------------------
 // DELETE BOOKING
+// DELETE /api/bookings/:id
 // ------------------------------------------
 
 app.delete("/api/bookings/:id", async (req, res) => {
@@ -267,6 +327,7 @@ app.delete("/api/bookings/:id", async (req, res) => {
                 id: req.params.id
             });
 
+
         if (!booking) {
 
             return res.status(404).json({
@@ -274,6 +335,13 @@ app.delete("/api/bookings/:id", async (req, res) => {
                 message: "Booking not found"
             });
         }
+
+
+        console.log(
+            "🗑️ Booking deleted:",
+            req.params.id
+        );
+
 
         res.json({
             success: true,
@@ -283,7 +351,7 @@ app.delete("/api/bookings/:id", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Booking delete failed:",
+            "❌ Booking delete failed:",
             error.message
         );
 
@@ -303,6 +371,7 @@ app.delete("/api/bookings/:id", async (req, res) => {
 
 // ------------------------------------------
 // GET ALL GALLERY PHOTOS
+// GET /api/gallery
 // ------------------------------------------
 
 app.get("/api/gallery", async (req, res) => {
@@ -312,7 +381,10 @@ app.get("/api/gallery", async (req, res) => {
         const gallery =
             await Gallery
                 .find()
-                .sort({ createdAt: -1 });
+                .sort({
+                    createdAt: -1
+                });
+
 
         res.json({
             success: true,
@@ -322,7 +394,7 @@ app.get("/api/gallery", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Failed to get gallery:",
+            "❌ Failed to get gallery:",
             error.message
         );
 
@@ -337,6 +409,7 @@ app.get("/api/gallery", async (req, res) => {
 
 // ------------------------------------------
 // ADD GALLERY PHOTO
+// POST /api/gallery
 // ------------------------------------------
 
 app.post("/api/gallery", async (req, res) => {
@@ -351,6 +424,10 @@ app.post("/api/gallery", async (req, res) => {
         } = req.body;
 
 
+        // --------------------------------------
+        // VALIDATION
+        // --------------------------------------
+
         if (!id || !category || !img) {
 
             return res.status(400).json({
@@ -361,21 +438,34 @@ app.post("/api/gallery", async (req, res) => {
         }
 
 
+        // --------------------------------------
+        // CREATE PHOTO
+        // --------------------------------------
+
         const photo = new Gallery({
 
-            id,
+            id: id,
 
-            category,
+            category: category,
 
-            caption:
-                caption || "",
+            caption: caption || "",
 
-            img
+            img: img
 
         });
 
 
+        // --------------------------------------
+        // SAVE PHOTO
+        // --------------------------------------
+
         await photo.save();
+
+
+        console.log(
+            "✅ Gallery photo saved:",
+            photo.id
+        );
 
 
         res.status(201).json({
@@ -392,7 +482,7 @@ app.post("/api/gallery", async (req, res) => {
     } catch (error) {
 
         console.error(
-            "Gallery save failed:",
+            "❌ Gallery save failed:",
             error.message
         );
 
@@ -413,6 +503,7 @@ app.post("/api/gallery", async (req, res) => {
 
 // ------------------------------------------
 // DELETE GALLERY PHOTO
+// DELETE /api/gallery/:id
 // ------------------------------------------
 
 app.delete(
@@ -440,6 +531,12 @@ app.delete(
             }
 
 
+            console.log(
+                "🗑️ Gallery photo deleted:",
+                req.params.id
+            );
+
+
             res.json({
 
                 success: true,
@@ -452,7 +549,7 @@ app.delete(
         } catch (error) {
 
             console.error(
-                "Gallery delete failed:",
+                "❌ Gallery delete failed:",
                 error.message
             );
 
@@ -479,6 +576,7 @@ app.delete(
 
 // ------------------------------------------
 // MAIN SERVER TEST
+// GET /
 // ------------------------------------------
 
 app.get("/", (req, res) => {
@@ -491,11 +589,13 @@ app.get("/", (req, res) => {
             "Tara Celebrations Backend is Running!"
 
     });
+
 });
 
 
 // ------------------------------------------
 // API TEST
+// GET /api/test
 // ------------------------------------------
 
 app.get("/api/test", (req, res) => {
@@ -508,6 +608,48 @@ app.get("/api/test", (req, res) => {
             "Tara Celebrations API is Working!"
 
     });
+
+});
+
+
+// ------------------------------------------
+// DATABASE TEST
+// GET /api/db-test
+// ------------------------------------------
+
+app.get("/api/db-test", async (req, res) => {
+
+    try {
+
+        const count =
+            await Booking.countDocuments();
+
+
+        res.json({
+
+            success: true,
+
+            mongodb: "connected",
+
+            bookings: count
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            mongodb: "error",
+
+            error:
+                error.message
+
+        });
+
+    }
+
 });
 
 
@@ -525,6 +667,7 @@ app.use((req, res) => {
             "API route not found"
 
     });
+
 });
 
 
@@ -532,36 +675,67 @@ app.use((req, res) => {
 // GLOBAL ERROR HANDLER
 // ==========================================
 
-app.use((error, req, res, next) => {
+app.use(
+    (error, req, res, next) => {
 
-    console.error(
-        "Server error:",
-        error
-    );
+        console.error(
+            "❌ Server error:",
+            error
+        );
 
-    res.status(500).json({
 
-        success: false,
+        res.status(500).json({
 
-        message:
-            "Internal server error"
+            success: false,
 
-    });
-});
+            message:
+                "Internal server error"
+
+        });
+
+    }
+);
 
 
 // ==========================================
 // START SERVER
 // ==========================================
 
-app.listen(PORT, () => {
+app.listen(
+    PORT,
+    () => {
 
-    console.log(
-        `Tara Celebrations backend running on http://localhost:${PORT}`
-    );
+        console.log(
+            "=========================================="
+        );
 
-    console.log(
-        `API test: http://localhost:${PORT}/api/test`
-    );
+        console.log(
+            "TARA CELEBRATIONS BACKEND"
+        );
 
-});
+        console.log(
+            "=========================================="
+        );
+
+        console.log(
+            `🚀 Server running on port ${PORT}`
+        );
+
+        console.log(
+            `🌐 http://localhost:${PORT}`
+        );
+
+        console.log(
+            `🧪 API test: http://localhost:${PORT}/api/test`
+        );
+
+        console.log(
+            `🗄️ DB test: http://localhost:${PORT}/api/db-test`
+        );
+
+        console.log(
+            "=========================================="
+        );
+
+    }
+);
