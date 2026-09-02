@@ -32,7 +32,8 @@ app.use(express.json({ limit: "10mb" }));
 // ==========================================
 
 mongoose
-    .connect(process.env.MONGODB_URI, {
+    mongoose
+    .connect("mongodb+srv://shaikgousepeer3333_db_user:PartyHub2026Test@partyhub.4rbzwo8.mongodb.net/?appName=PartyHub", {
         serverSelectionTimeoutMS: 10000
     })
     .then(() => {
