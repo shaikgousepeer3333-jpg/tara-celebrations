@@ -1903,8 +1903,8 @@ function renderGalleryAdmin() {
 
 
     const list =
-        phGetGallery();
-
+     adminGallery;
+ 
 
     const count =
         document.getElementById(
