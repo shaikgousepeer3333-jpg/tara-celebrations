@@ -24,127 +24,20 @@ function phApplyLogos() {
 
 
 /* =========================================================
-   STORAGE KEYS
+   BACKEND API BASE
    ========================================================= */
 
-const PH_KEYS = {
-
-  gallery: 'ph_gallery'
-
-};
+const PH_API_BASE =
+  'https://tara-celebrations-api.onrender.com/api';
 
 
 /* =========================================================
-   CROSS TAB SYNC
+   GALLERY CACHE
+   (populated from MongoDB via phLoadGallery, then read
+   synchronously by render / lightbox helpers)
    ========================================================= */
 
-const PH_CHANNEL =
-  typeof BroadcastChannel !== 'undefined'
-    ? new BroadcastChannel(
-        'tara_celebrations_sync'
-      )
-    : null;
-
-
-/* =========================================================
-   DEFAULT GALLERY DATA
-   ========================================================= */
-
-function phSeedGallery() {
-
-  if (
-    localStorage.getItem(
-      PH_KEYS.gallery
-    )
-  ) {
-    return;
-  }
-
-
-  const seed = [
-
-    {
-      id: 'g1',
-      category: 'theatre',
-      caption: 'Main Screening Room',
-      img:
-        'https://picsum.photos/seed/phg1/700/700',
-      big: true
-    },
-
-    {
-      id: 'g2',
-      category: 'birthday',
-      caption: 'Birthday Set-Up',
-      img:
-        'https://picsum.photos/seed/phg2/700/500'
-    },
-
-    {
-      id: 'g3',
-      category: 'decor',
-      caption: 'Balloon Arch Decor',
-      img:
-        'https://picsum.photos/seed/phg3/700/500'
-    },
-
-    {
-      id: 'g4',
-      category: 'anniversary',
-      caption: 'Anniversary Dinner',
-      img:
-        'https://picsum.photos/seed/phg4/700/500'
-    },
-
-    {
-      id: 'g5',
-      category: 'theatre',
-      caption: 'Premiere Room Seating',
-      img:
-        'https://picsum.photos/seed/phg5/700/500'
-    },
-
-    {
-      id: 'g6',
-      category: 'decor',
-      caption: 'Fairy-Light Backdrop',
-      img:
-        'https://picsum.photos/seed/phg6/700/500'
-    },
-
-    {
-      id: 'g7',
-      category: 'birthday',
-      caption: 'Cake Table Styling',
-      img:
-        'https://picsum.photos/seed/phg7/700/500'
-    },
-
-    {
-      id: 'g8',
-      category: 'anniversary',
-      caption: 'Couple’s Screening',
-      img:
-        'https://picsum.photos/seed/phg8/700/500'
-    },
-
-    {
-      id: 'g9',
-      category: 'theatre',
-      caption: '4K Projection Wall',
-      img:
-        'https://picsum.photos/seed/phg9/700/500'
-    }
-
-  ];
-
-
-  localStorage.setItem(
-    PH_KEYS.gallery,
-    JSON.stringify(seed)
-  );
-
-}
+let phGalleryCache = [];
 
 
 /* =========================================================
@@ -153,28 +46,60 @@ function phSeedGallery() {
 
 function phGetGallery() {
 
+  /*
+    Synchronous read of whatever gallery data
+    we last loaded from MongoDB. Used by code
+    (e.g. the lightbox) that needs the list
+    right away, after phLoadGallery() has
+    already populated the cache.
+  */
+
+  return phGalleryCache;
+
+}
+
+
+/* =========================================================
+   LOAD GALLERY FROM MONGODB
+   ========================================================= */
+
+async function phLoadGallery() {
+
   try {
 
-    return (
+    const response =
+      await fetch(
+        `${PH_API_BASE}/gallery`
+      );
 
-      JSON.parse(
-        localStorage.getItem(
-          PH_KEYS.gallery
-        )
-      ) || []
+    if (!response.ok) {
 
-    );
+      throw new Error(
+        'Failed to load gallery'
+      );
+
+    }
+
+    const result =
+      await response.json();
+
+    phGalleryCache =
+      Array.isArray(result.gallery)
+        ? result.gallery
+        : [];
 
   } catch (error) {
 
     console.warn(
-      'Gallery data could not be read:',
+      'Gallery data could not be loaded:',
       error
     );
 
-    return [];
+    phGalleryCache = [];
 
   }
+
+  return phGalleryCache;
 
 }
 
@@ -190,8 +115,6 @@ document.addEventListener(
     try {
 
       phApplyLogos();
-
-      phSeedGallery();
 
       initImageFallback();
 
@@ -919,7 +842,7 @@ function initStats() {
    GALLERY
    ========================================================= */
 
-function initGallery() {
+async function initGallery() {
 
   const grid =
     document.getElementById(
@@ -942,6 +865,15 @@ function initGallery() {
 
     const items =
       phGetGallery();
+
+    if (!items.length) {
+
+      grid.innerHTML =
+        '<p class="gallery-empty">No photos yet. Check back soon!</p>';
+
+      return;
+
+    }
 
 
     grid.innerHTML =
@@ -1015,6 +947,8 @@ function initGallery() {
 
   }
 
+
+  await phLoadGallery();
 
   render();
 
@@ -2397,121 +2331,36 @@ function initTracker() {
 
 
 /* =========================================================
-   LIVE SYNC
-   ========================================================= */
-
-function phHandleSyncKey(
-  key
-) {
-
-  /* -------------------------------------------------------
-     GALLERY CHANGED
-     ------------------------------------------------------- */
-
-  if (
-    key === PH_KEYS.gallery
-  ) {
-
-    window.phRenderGallery?.();
-
-  }
-
-
-  /*
-    Bookings are stored in MongoDB now.
-
-    Therefore we do NOT listen for
-    localStorage booking changes.
-
-    If customer is tracking a booking,
-    refresh it from MongoDB.
-  */
-
-  if (
-    phLastTrackQuery
-  ) {
-
-    phFindBooking(
-      phLastTrackQuery
-    ).then(
-      (booking) => {
-
-        renderTrackResult(
-          booking
-        );
-
-      }
-    );
-
-  }
-
-}
-
-
-/* =========================================================
    LIVE SYNC INITIALIZATION
    ========================================================= */
 
 function initLiveSync() {
 
   /* =======================================================
-     STORAGE EVENT
-     ======================================================= */
-
-  window.addEventListener(
-    'storage',
-    (e) => {
-
-      if (
-        e.key === PH_KEYS.gallery
-      ) {
-
-        phHandleSyncKey(
-          PH_KEYS.gallery
-        );
-
-      }
-
-    }
-  );
-
-
-  /* =======================================================
-     BROADCAST CHANNEL
-     ======================================================= */
-
-  if (PH_CHANNEL) {
-
-    PH_CHANNEL.addEventListener(
-      'message',
-      (e) => {
-
-        phHandleSyncKey(
-          e.data?.key
-        );
-
-      }
-    );
-
-  }
-
-
-  /* =======================================================
      GALLERY POLLING
      ======================================================= */
 
+  /*
+    The gallery is stored in MongoDB now (same as
+    bookings), so we poll the API instead of watching
+    localStorage / BroadcastChannel for changes.
+  */
+
   let lastGallerySnapshot =
-    localStorage.getItem(
-      PH_KEYS.gallery
+    JSON.stringify(
+      phGetGallery()
     );
 
 
   setInterval(
-    () => {
+    async () => {
+
+      await phLoadGallery();
+
 
       const gallery =
-        localStorage.getItem(
-          PH_KEYS.gallery
+        JSON.stringify(
+          phGetGallery()
         );
 
 
@@ -2524,14 +2373,12 @@ function initLiveSync() {
           gallery;
 
 
-        phHandleSyncKey(
-          PH_KEYS.gallery
-        );
+        window.phRenderGallery?.();
 
       }
 
     },
-    2000
+    5000
   );
 
 
