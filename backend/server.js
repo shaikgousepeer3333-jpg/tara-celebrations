@@ -13,6 +13,8 @@ const mongoose = require("mongoose");
 
 const Booking = require("./models/Booking");
 const Gallery = require("./models/Gallery");
+const SiteContent = require("./models/SiteContent");
+const siteContentDefaults = require("./siteContentDefaults");
 
 const app = express();
 

@@ -277,6 +277,7 @@ tbody tr:hover{ background:rgba(201,164,70,.06); }
       <button class="side-link active" data-view="dashboard"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>Dashboard</button>
       <button class="side-link" data-view="bookings"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M4 9h16M9 5v-1M15 5v-1"/></svg>Bookings</button>
       <button class="side-link" data-view="gallery"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5-9 9"/></svg>Gallery</button>
+      <button class="side-link" data-view="website"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h6"/></svg>Website</button>
       <button class="side-link" data-view="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.07-.4.1-.8.1-1.2Z"/></svg>Settings</button>
     </nav>
 
@@ -384,6 +385,75 @@ tbody tr:hover{ background:rgba(201,164,70,.06); }
     </section>
 
     <!-- SETTINGS -->
+
+
+    <section class="view" id="view-website" hidden>
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">CUSTOMER WEBSITE</div>
+          <h1>Website Management</h1>
+          <p class="muted">Edit the content that will be displayed on the customer website.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="reloadWebsiteContent">Reload</button>
+          <button type="button" class="btn btn-primary" id="saveWebsiteContent">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card admin-card">
+          <h3>General Information</h3>
+          <label>Business Name<input id="websiteBrandName" name="brandName" type="text"></label>
+          <label>Tagline<input id="websiteTagline" name="tagline" type="text"></label>
+          <label>Phone<input id="websitePhone" name="phone" type="text"></label>
+          <label>Email<input id="websiteEmail" name="email" type="email"></label>
+          <label>Address<textarea id="websiteAddress" name="address" rows="3"></textarea></label>
+          <label>Business Hours<input id="websiteHours" name="hours" type="text"></label>
+          <label>Logo URL<input id="websiteLogo" name="logo" type="url"></label>
+          <label>Instagram URL<input id="websiteInstagram" name="instagram" type="url"></label>
+          <label>WhatsApp<input id="websiteWhatsapp" name="whatsapp" type="text"></label>
+          <label>Google Maps<input id="websiteGoogleMaps" name="googleMaps" type="url"></label>
+        </div>
+
+        <div class="card admin-card">
+          <h3>Hero Section</h3>
+          <label>Small Heading<input id="websiteHeroEyebrow" name="heroEyebrow" type="text"></label>
+          <label>Main Heading<textarea id="websiteHeroHeading" name="heroHeading" rows="3"></textarea></label>
+          <label>Description<textarea id="websiteHeroDescription" name="heroDescription" rows="5"></textarea></label>
+          <label>Button Text<input id="websiteHeroButton" name="heroButton" type="text"></label>
+          <label>Button Link<input id="websiteHeroButtonLink" name="heroButtonLink" type="text"></label>
+          <label>Hero Image URL<input id="websiteHeroImage" name="heroImage" type="url"></label>
+        </div>
+
+        <div class="card admin-card">
+          <h3>About Section</h3>
+          <label>Heading<input id="websiteAboutHeading" name="aboutHeading" type="text"></label>
+          <label>Description<textarea id="websiteAboutDescription" name="aboutDescription" rows="5"></textarea></label>
+          <label>Image URL<input id="websiteAboutImage" name="aboutImage" type="url"></label>
+          <label>Badge<input id="websiteAboutBadge" name="aboutBadge" type="text"></label>
+        </div>
+
+        <div class="card admin-card">
+          <h3>Booking Settings</h3>
+          <label>Booking Heading<input id="websiteBookingHeading" name="bookingHeading" type="text"></label>
+          <label>Booking Description<textarea id="websiteBookingDescription" name="bookingDescription" rows="4"></textarea></label>
+          <label>Maximum Guests<input id="websiteMaximumGuests" name="maximumGuests" type="number" min="1"></label>
+        </div>
+
+        <div class="card admin-card">
+          <h3>Contact Section</h3>
+          <label>Heading<input id="websiteContactHeading" name="contactHeading" type="text"></label>
+          <label>Description<textarea id="websiteContactDescription" name="contactDescription" rows="5"></textarea></label>
+        </div>
+
+        <div class="card admin-card">
+          <h3>Footer</h3>
+          <label>Description<textarea id="websiteFooterDescription" name="footerDescription" rows="5"></textarea></label>
+          <label>Copyright<input id="websiteCopyright" name="copyright" type="text"></label>
+        </div>
+      </div>
+    </section>
+
     <section class="view" id="view-settings" hidden>
       <header class="view-head"><div><p class="eyebrow">Account</p><h1>Settings</h1></div></header>
 
@@ -427,6 +497,6 @@ tbody tr:hover{ background:rgba(201,164,70,.06); }
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="party hub admin/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
