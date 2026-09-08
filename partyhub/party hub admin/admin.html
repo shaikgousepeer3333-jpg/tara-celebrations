@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 <style>
 :root{
   --black:        #0c0708;
@@ -388,68 +389,68 @@ tbody tr:hover{ background:rgba(201,164,70,.06); }
 
 
     <section class="view" id="view-website" hidden>
-      <div class="page-head">
+      <div class="view-head">
         <div>
           <div class="eyebrow">CUSTOMER WEBSITE</div>
           <h1>Website Management</h1>
           <p class="muted">Edit the content that will be displayed on the customer website.</p>
         </div>
         <div class="actions">
-          <button type="button" class="btn" id="reloadWebsiteContent">Reload</button>
-          <button type="button" class="btn btn-primary" id="saveWebsiteContent">Save Changes</button>
+          <button type="button" class="btn-outline" id="reloadWebsiteContent">Reload</button>
+          <button type="button" class="btn-gold" id="saveWebsiteContent">Save Changes</button>
         </div>
       </div>
 
-      <div class="grid-2">
-        <div class="card admin-card">
+      <div class="website-grid">
+        <div class="panel website-card">
           <h3>General Information</h3>
-          <label>Business Name<input id="websiteBrandName" name="brandName" type="text"></label>
-          <label>Tagline<input id="websiteTagline" name="tagline" type="text"></label>
-          <label>Phone<input id="websitePhone" name="phone" type="text"></label>
-          <label>Email<input id="websiteEmail" name="email" type="email"></label>
-          <label>Address<textarea id="websiteAddress" name="address" rows="3"></textarea></label>
-          <label>Business Hours<input id="websiteHours" name="hours" type="text"></label>
-          <label>Logo URL<input id="websiteLogo" name="logo" type="url"></label>
-          <label>Instagram URL<input id="websiteInstagram" name="instagram" type="url"></label>
-          <label>WhatsApp<input id="websiteWhatsapp" name="whatsapp" type="text"></label>
-          <label>Google Maps<input id="websiteGoogleMaps" name="googleMaps" type="url"></label>
+          <label class="website-field">Business Name<input id="websiteBrandName" name="brandName" type="text"></label>
+          <label class="website-field">Tagline<input id="websiteTagline" name="tagline" type="text"></label>
+          <label class="website-field">Phone<input id="websitePhone" name="phone" type="text"></label>
+          <label class="website-field">Email<input id="websiteEmail" name="email" type="email"></label>
+          <label class="website-field">Address<textarea id="websiteAddress" name="address" rows="3"></textarea></label>
+          <label class="website-field">Business Hours<input id="websiteHours" name="hours" type="text"></label>
+          <label class="website-field">Logo URL<input id="websiteLogo" name="logo" type="url"></label>
+          <label class="website-field">Instagram URL<input id="websiteInstagram" name="instagram" type="url"></label>
+          <label class="website-field">WhatsApp<input id="websiteWhatsapp" name="whatsapp" type="text"></label>
+          <label class="website-field">Google Maps<input id="websiteGoogleMaps" name="googleMaps" type="url"></label>
         </div>
 
-        <div class="card admin-card">
+        <div class="panel website-card">
           <h3>Hero Section</h3>
-          <label>Small Heading<input id="websiteHeroEyebrow" name="heroEyebrow" type="text"></label>
-          <label>Main Heading<textarea id="websiteHeroHeading" name="heroHeading" rows="3"></textarea></label>
-          <label>Description<textarea id="websiteHeroDescription" name="heroDescription" rows="5"></textarea></label>
-          <label>Button Text<input id="websiteHeroButton" name="heroButton" type="text"></label>
-          <label>Button Link<input id="websiteHeroButtonLink" name="heroButtonLink" type="text"></label>
-          <label>Hero Image URL<input id="websiteHeroImage" name="heroImage" type="url"></label>
+          <label class="website-field">Small Heading<input id="websiteHeroEyebrow" name="heroEyebrow" type="text"></label>
+          <label class="website-field">Main Heading<textarea id="websiteHeroHeading" name="heroHeading" rows="3"></textarea></label>
+          <label class="website-field">Description<textarea id="websiteHeroDescription" name="heroDescription" rows="5"></textarea></label>
+          <label class="website-field">Button Text<input id="websiteHeroButton" name="heroButton" type="text"></label>
+          <label class="website-field">Button Link<input id="websiteHeroButtonLink" name="heroButtonLink" type="text"></label>
+          <label class="website-field">Hero Image URL<input id="websiteHeroImage" name="heroImage" type="url"></label>
         </div>
 
-        <div class="card admin-card">
+        <div class="panel website-card">
           <h3>About Section</h3>
-          <label>Heading<input id="websiteAboutHeading" name="aboutHeading" type="text"></label>
-          <label>Description<textarea id="websiteAboutDescription" name="aboutDescription" rows="5"></textarea></label>
-          <label>Image URL<input id="websiteAboutImage" name="aboutImage" type="url"></label>
-          <label>Badge<input id="websiteAboutBadge" name="aboutBadge" type="text"></label>
+          <label class="website-field">Heading<input id="websiteAboutHeading" name="aboutHeading" type="text"></label>
+          <label class="website-field">Description<textarea id="websiteAboutDescription" name="aboutDescription" rows="5"></textarea></label>
+          <label class="website-field">Image URL<input id="websiteAboutImage" name="aboutImage" type="url"></label>
+          <label class="website-field">Badge<input id="websiteAboutBadge" name="aboutBadge" type="text"></label>
         </div>
 
-        <div class="card admin-card">
+        <div class="panel website-card">
           <h3>Booking Settings</h3>
-          <label>Booking Heading<input id="websiteBookingHeading" name="bookingHeading" type="text"></label>
-          <label>Booking Description<textarea id="websiteBookingDescription" name="bookingDescription" rows="4"></textarea></label>
-          <label>Maximum Guests<input id="websiteMaximumGuests" name="maximumGuests" type="number" min="1"></label>
+          <label class="website-field">Booking Heading<input id="websiteBookingHeading" name="bookingHeading" type="text"></label>
+          <label class="website-field">Booking Description<textarea id="websiteBookingDescription" name="bookingDescription" rows="4"></textarea></label>
+          <label class="website-field">Maximum Guests<input id="websiteMaximumGuests" name="maximumGuests" type="number" min="1"></label>
         </div>
 
-        <div class="card admin-card">
+        <div class="panel website-card">
           <h3>Contact Section</h3>
-          <label>Heading<input id="websiteContactHeading" name="contactHeading" type="text"></label>
-          <label>Description<textarea id="websiteContactDescription" name="contactDescription" rows="5"></textarea></label>
+          <label class="website-field">Heading<input id="websiteContactHeading" name="contactHeading" type="text"></label>
+          <label class="website-field">Description<textarea id="websiteContactDescription" name="contactDescription" rows="5"></textarea></label>
         </div>
 
-        <div class="card admin-card">
+        <div class="panel website-card">
           <h3>Footer</h3>
-          <label>Description<textarea id="websiteFooterDescription" name="footerDescription" rows="5"></textarea></label>
-          <label>Copyright<input id="websiteCopyright" name="copyright" type="text"></label>
+          <label class="website-field">Description<textarea id="websiteFooterDescription" name="footerDescription" rows="5"></textarea></label>
+          <label class="website-field">Copyright<input id="websiteCopyright" name="copyright" type="text"></label>
         </div>
       </div>
     </section>
@@ -497,6 +498,6 @@ tbody tr:hover{ background:rgba(201,164,70,.06); }
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="script.js"></script>
+<script src="party hub admin/script.js"></script>
 </body>
 </html>
