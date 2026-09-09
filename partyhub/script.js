@@ -2712,18 +2712,37 @@ window.addEventListener(
     applyTheme(c);
   }
 
+  const CACHE_KEY = 'ph_site_content_cache';
+
+  function applyCachedContent() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) applyContent(JSON.parse(cached));
+    } catch (error) {
+      // No usable cache yet; the page will just show its built-in default text until the fetch below completes.
+    }
+  }
+
   async function loadSiteContent() {
     try {
       const response = await fetch(CMS_API, { headers: { Accept: 'application/json' }, cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = await response.json();
-      if (result.success && result.content) applyContent(result.content);
+      if (result.success && result.content) {
+        applyContent(result.content);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(result.content)); } catch (error) {}
+      }
     } catch (error) {
       console.warn('Website content service unavailable; using the built-in website content.', error);
     }
   }
 
+  // Apply whatever we saved from the visitor's last visit immediately, so returning
+  // visitors don't see a flash of the old placeholder text while we re-check the database.
+  applyCachedContent();
+
   document.addEventListener('DOMContentLoaded', () => {
+    applyCachedContent();
     loadSiteContent();
     setInterval(loadSiteContent, 15000);
   });
