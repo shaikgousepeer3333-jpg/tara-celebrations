@@ -1150,6 +1150,18 @@ function renderBookingsTable() {
 
                         <td>
 
+                            ${String(booking.status).toLowerCase() !== 'confirmed' ? `
+                            <button
+                                class="row-confirm"
+                                data-quick-confirm="${escapeHtml(
+                                    booking.id
+                                )}"
+                                title="Confirm booking"
+                            >
+                                ✓
+                            </button>
+                            ` : ''}
+
                             <button
                                 class="row-del"
                                 data-del="${escapeHtml(
@@ -1214,6 +1226,28 @@ function renderBookingsTable() {
 
                     await deleteBooking(
                         button.dataset.del
+                    );
+
+                }
+            );
+
+        });
+
+    tbody
+        .querySelectorAll("[data-quick-confirm]")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                async (event) => {
+
+                    event.stopPropagation();
+
+                    button.disabled = true;
+
+                    await updateBookingStatus(
+                        button.dataset.quickConfirm,
+                        "Confirmed"
                     );
 
                 }
