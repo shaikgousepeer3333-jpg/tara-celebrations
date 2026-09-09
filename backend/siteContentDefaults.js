@@ -1,99 +1,114 @@
-const siteContentDefaults = {
-  general: {
-    brandName: "Tara Celebrations",
-    tagline: "Celebrate every beautiful moment",
-    phone: "",
-    email: "",
-    address: "",
-    hours: "",
-    logo: "",
-    instagram: "",
-    whatsapp: "",
-    googleMaps: ""
-  },
-
-  navigation: {
-    home: "Home",
-    about: "About",
-    occasions: "Occasions",
-    gallery: "Gallery",
-    packages: "Packages",
-    booking: "Book Now",
-    contact: "Contact"
-  },
-
-  hero: {
-    eyebrow: "",
-    heading: "Create Beautiful Memories",
-    description: "",
-    buttonText: "Book Now",
-    buttonLink: "#booking",
-    image: ""
-  },
-
-  about: {
-    heading: "",
-    description: "",
-    image: "",
-    badge: "",
-    points: []
-  },
-
-  occasions: [],
-
-  whyChooseUs: {
-    heading: "",
-    description: "",
-    image: "",
-    cards: [],
-    statistics: []
-  },
-
-  gallery: {
-    heading: "",
-    description: "",
-    filters: []
-  },
-
-  testimonials: [],
-
-  packages: [],
-
-  booking: {
-    heading: "",
-    description: "",
-    occasions: [],
-    timeSlots: [],
-    maximumGuests: 100
-  },
-
-  tracking: {
-    heading: "",
-    description: "",
-    placeholder: "Enter booking ID",
-    buttonText: "Track Booking",
-    noResultMessage: "Booking not found"
-  },
-
-  contact: {
-    heading: "",
-    description: ""
-  },
-
-  footer: {
-    description: "",
-    quickLinksTitle: "Quick Links",
-    contactTitle: "Contact",
-    followTitle: "Follow Us",
-    copyright: ""
-  },
-
-  appearance: {
-    primaryColor: "",
-    secondaryColor: "",
-    backgroundColor: "",
-    textColor: ""
-  }
+const defaults = {
+  brandName: "Tara Celebrations",
+  logoUrl: "",
+  footerTagline: "Making Your Moments Magical",
+  footerDescription: "Private theatres for every celebration in Anantapur.",
+  phone: "+91 79817 93207",
+  email: "info@taracelebrations.com",
+  address: "105/B, First Floor, Community Hall Road, Kamalanagar, Anantapur, Andhra Pradesh 515001",
+  shortAddress: "Kamalanagar, Anantapur",
+  hours: "Every day · 10:00 AM – 12:30 AM",
+  instagramUrl: "http://instagram.com/tara.celebrations",
+  whatsappUrl: "https://api.whatsapp.com/send?phone=+917981793207&text=Hello%2C%20I'd%20like%20to%20know%20more%20about%20Tara%20Celebrations.",
+  mapUrl: "https://www.google.com/maps?q=105%2FB%20Community%20Hall%20Road%20Sanjeeva%20Reddy%20Nagar%20Anantapur&output=embed",
+  heroEyebrow: "Est. Private Theatre & Celebration House",
+  heroTitleHtml: "Binge Your <em>Memories</em>,<br> Not Just A Movie",
+  heroDescription: "A private screening room of your own — Dolby Atmos sound, 4K projection and a fully dressed set, reserved only for your circle. Birthdays, anniversaries and every reason worth celebrating, staged like a premiere.",
+  heroPrimaryText: "Reserve Your Screening",
+  heroPrimaryLink: "#booking",
+  heroSecondaryText: "View The Gallery",
+  heroSecondaryLink: "#gallery",
+  heroImage: "https://picsum.photos/seed/phhero/1600/1000",
+  aboutEyebrow: "Who We Are",
+  aboutTitleHtml: "A Stage, Curtained<br>Just For You",
+  aboutLead: "Tara Celebrations began with a simple idea: not every celebration needs a hall full of strangers. Some deserve a room that feels entirely theirs.",
+  aboutText: "Every booking gets a soundproofed private theatre, cinema-grade Dolby Atmos audio, a crisp 4K picture, and a crew that delivers the details without getting in the way.",
+  aboutLinkText: "See what we stage for →",
+  aboutLink: "#occasions",
+  aboutImage: "https://picsum.photos/seed/phabout/900/1100",
+  aboutBadgeNumber: "V",
+  aboutBadgeLabel: "Years Staging Celebrations",
+  occasionsEyebrow: "What We Stage",
+  occasionsTitleHtml: "Every Occasion,<br>Set To Its Own Script",
+  occasion1Title: "Birthday Party",
+  occasion1Text: "A private premiere for the guest of honour — favourite films, balloons, a cake reveal, and a room that's entirely theirs.",
+  occasion2Title: "Anniversary",
+  occasion2Text: "Low lights, a curated playlist, dinner service and a screen just for two — an intimate encore of your first year together.",
+  occasion3Title: "Party & Get-Togethers",
+  occasion3Text: "Reunions, farewells, kitty parties and everything in between, staged in a room built for good noise and better company.",
+  occasion4Title: "Corporate & Screenings",
+  occasion4Text: "Product reveals, wrap parties and private screenings, run with cinema-grade sound and a screen that does the pitching for you.",
+  whyImage: "https://picsum.photos/seed/phwhy/1600/900",
+  whyEyebrow: "Why Choose Us",
+  whyTitleHtml: "Every Detail, Held<br>To An Opening-Night Standard",
+  why1Title: "Private & Soundproof",
+  why1Text: "Fully enclosed auditoriums — the only voices you'll hear belong to your own party.",
+  why2Title: "Spotless, Always",
+  why2Text: "Every room is sanitised and reset between bookings, with staff trained to hospitality standards.",
+  why3Title: "Easy To Reach",
+  why3Text: "Centrally located in Kamalanagar, with parking and easy access for every guest.",
+  why4Title: "Honestly Priced",
+  why4Text: "Transparent packages with no hidden fees — what you're quoted is what you pay.",
+  stat1Number: "0", stat1Label: "Celebrations Hosted",
+  stat2Number: "0", stat2Label: "Years Running",
+  stat3Number: "0", stat3Label: "Private Theatres",
+  stat4Number: "0", stat4Label: "Happy Guests",
+  galleryEyebrow: "The Gallery",
+  galleryTitleHtml: "A Look Inside<br>Our Rooms",
+  galleryFilterAll: "All",
+  galleryFilter1: "Birthday",
+  galleryFilter2: "Anniversary",
+  galleryFilter3: "Theatre Rooms",
+  galleryFilter4: "Decor",
+  testimonialsEyebrow: "Reviews From The House",
+  testimonial1: "“We booked the room for my daughter's 10th birthday and it felt like her own private premiere. The screen and sound completely blew us away.”",
+  testimonial1Name: "Birthday Celebration",
+  testimonial2: "“Celebrated our anniversary here instead of a restaurant. Quiet, dressed beautifully, and nobody rushing us out after dinner.”",
+  testimonial2Name: "Anniversary Celebration",
+  testimonial3: "“Our college reunion needed a place that could hold twelve loud people and a slideshow. This did both without a single complaint.”",
+  testimonial3Name: "College Reunion",
+  bookingEyebrow: "Reserve A Room",
+  bookingTitleHtml: "Book Your<br>Private Screening",
+  bookingLead: "Tell us the occasion and the date, and we'll hold the room for you. You'll get a confirmation on WhatsApp within the hour.",
+  bookingAddress: "105/B, Community Hall Road, Kamalanagar, Anantapur",
+  package1Name: "Classic", package1Text: "Up to 8 guests, standard decor, 3-hour slot.",
+  package2Name: "Deluxe", package2Text: "Up to 15 guests, themed decor, cake table, 4-hour slot.",
+  package3Name: "Premiere", package3Text: "Up to 25 guests, full styling, catering add-ons, half-day slot.",
+  ticketEyebrow: "Tara Celebrations · Admit Your Party",
+  labelFullName: "Full Name", placeholderFullName: "Your name",
+  labelPhone: "Phone", placeholderPhone: "10-digit mobile",
+  labelEmail: "Email (optional)", placeholderEmail: "you@email.com",
+  labelOccasion: "Occasion", labelPackage: "Package", labelDate: "Date", labelTime: "Time Slot", labelGuests: "Number Of Guests", placeholderGuests: "e.g. 8", labelNotes: "Notes (optional)", placeholderNotes: "Cake, decoration theme, anything else we should know",
+  submitButton: "Confirm Reservation",
+  bookingNote: "You'll get an on-screen ticket, and can send the same details to us on WhatsApp in one tap.",
+  successTitle: "Reservation Held",
+  successText: "Your screening is provisionally booked. We'll confirm within the hour.",
+  whatsappButton: "Send Details On WhatsApp",
+  bookAnotherButton: "Book Another",
+  goTrackLink: "Check your booking status →",
+  trackEyebrow: "Already Booked?",
+  trackTitleHtml: "Track Your<br>Reservation Status",
+  trackLead: "Enter the reference number from your ticket (or the phone number you booked with) to see the latest status — updated live from our booking system.",
+  trackPlaceholder: "e.g. TC-482913 or 9876543210",
+  trackButton: "Check Status",
+  trackEmpty: "We couldn't find a booking matching that reference or phone number. Double-check and try again, or WhatsApp us directly.",
+  contactEyebrow: "Find Us",
+  contactTitleHtml: "Come See<br>The Room Yourself",
+  contactLead: "Walk-ins are welcome for a quick tour before you book — just call ahead so we can have a room ready to show you.",
+  contactAddressLabel: "Address", contactPhoneLabel: "Phone", contactEmailLabel: "Email", contactHoursLabel: "Hours",
+  footerQuickHeading: "Quick Links", footerContactHeading: "Contact", footerFollowHeading: "Follow",
+  footerAboutLink: "About Us", footerGalleryLink: "Gallery", footerBookLink: "Book Now", footerContactLink: "Contact",
+  copyright: "Tara Celebrations Anantapur. All rights reserved.",
+  bookingOccasions: ["Birthday Party", "Anniversary", "Get-Together / Reunion", "Corporate / Screening", "Other"],
+  bookingPackages: ["Classic", "Deluxe", "Premiere"],
+  timeSlots: ["10:00 AM – 1:00 PM", "2:00 PM – 5:00 PM", "6:00 PM – 9:00 PM", "9:30 PM – 12:30 AM"],
+  maxGuests: 30,
+  navHome: "Home", navAbout: "About", navOccasions: "Occasions", navGallery: "Gallery", navBook: "Book Now", navTrack: "Track", navContact: "Contact",
+  navHomeLink: "#home", navAboutLink: "#about", navOccasionsLink: "#occasions", navGalleryLink: "#gallery", navBookLink: "#booking", navTrackLink: "#track", navContactLink: "#contact",
+  headerBookButton: "Book Now",
+  instagramText: "Instagram", whatsappText: "WhatsApp",
+  themeGold: "#c9a446", themeGoldBright: "#ecd48f", themeMaroon: "#591026", themeInk: "#0c0708", themeCream: "#f4ead4",
+  showAbout: true, showOccasions: true, showWhy: true, showGallery: true, showTestimonials: true, showBooking: true, showTrack: true, showContact: true
 };
 
-module.exports = siteContentDefaults;
+module.exports = defaults;
