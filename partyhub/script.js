@@ -1689,7 +1689,7 @@ function initBookingForm() {
       if (whatsappButton) {
 
         whatsappButton.href =
-          `https://api.whatsapp.com/send?phone=917981793207&text=${whatsappMessage}`;
+          `${window.PH_CMS_WHATSAPP_BASE || 'https://api.whatsapp.com/send?phone=917981793207'}&text=${whatsappMessage}`;
 
 
         whatsappButton.target =
@@ -2490,3 +2490,241 @@ window.addEventListener(
 
   }
 );
+/* =========================================================
+   ADMIN-CONTROLLED WEBSITE CONTENT
+   ========================================================= */
+(function initAdminControlledWebsite() {
+  const CMS_API = 'https://tara-celebrations-api.onrender.com/api/site-content';
+
+  function safeHtml(value) {
+    const template = document.createElement('template');
+    template.innerHTML = String(value ?? '');
+    template.content.querySelectorAll('script,style,iframe,object,embed,link,meta').forEach(el => el.remove());
+    template.content.querySelectorAll('*').forEach(el => {
+      [...el.attributes].forEach(attr => {
+        if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+        if ((attr.name === 'href' || attr.name === 'src') && /^\s*javascript:/i.test(attr.value)) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
+    return template.innerHTML;
+  }
+
+  function setText(selector, value) {
+    document.querySelectorAll(selector).forEach(el => { el.textContent = value ?? ''; });
+  }
+
+  function setHtml(selector, value) {
+    document.querySelectorAll(selector).forEach(el => { el.innerHTML = safeHtml(value); });
+  }
+
+  function setAttr(selector, attr, value) {
+    document.querySelectorAll(selector).forEach(el => {
+      if (value !== undefined && value !== null && value !== '') el.setAttribute(attr, value);
+    });
+  }
+
+  function setIndexed(selector, values, html = false) {
+    const els = document.querySelectorAll(selector);
+    (Array.isArray(values) ? values : []).forEach((value, i) => {
+      if (!els[i]) return;
+      if (html) els[i].innerHTML = safeHtml(value);
+      else els[i].textContent = value ?? '';
+    });
+  }
+
+  function setSelect(id, values) {
+    const select = document.getElementById(id);
+    if (!select || !Array.isArray(values)) return;
+    const current = select.value;
+    select.innerHTML = '<option disabled value="">Choose one</option>' + values.map(value => {
+      const v = String(value ?? '');
+      const esc = v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return `<option value="${esc}">${esc}</option>`;
+    }).join('');
+    if (values.includes(current)) select.value = current;
+  }
+
+  function setVisible(selector, visible) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.hidden = visible === false;
+    if (visible !== false) el.removeAttribute('hidden');
+  }
+
+  function applyTheme(c) {
+    const root = document.documentElement;
+    const vars = {
+      '--gold': c.themeGold,
+      '--gold-bright': c.themeGoldBright,
+      '--maroon': c.themeMaroon,
+      '--black': c.themeInk,
+      '--cream': c.themeCream
+    };
+    Object.entries(vars).forEach(([name, value]) => {
+      if (value) root.style.setProperty(name, value);
+    });
+  }
+
+  function applyContent(c) {
+    if (!c || typeof c !== 'object') return;
+
+    setText('.brand-text', c.brandName);
+    if (c.logoUrl) setAttr('.js-logo', 'src', c.logoUrl);
+    setText('.header-phone span', c.phone);
+    setText('.footer-tagline', c.footerTagline);
+    const footerPs = document.querySelectorAll('.footer-brand > p:not(.footer-tagline)');
+    if (footerPs[0]) footerPs[0].textContent = c.footerDescription;
+
+    setIndexed('.main-nav .nav-link', [c.navHome,c.navAbout,c.navOccasions,c.navGallery,c.navBook,c.navTrack,c.navContact]);
+    setIndexed('.footer-col:nth-child(2) a', [c.footerAboutLink,c.footerGalleryLink,c.footerBookLink,c.footerContactLink]);
+    setIndexed('.main-nav .nav-link', [c.navHome,c.navAbout,c.navOccasions,c.navGallery,c.navBook,c.navTrack,c.navContact]);
+    const navLinks = document.querySelectorAll('.main-nav .nav-link');
+    [c.navHomeLink,c.navAboutLink,c.navOccasionsLink,c.navGalleryLink,c.navBookLink,c.navTrackLink,c.navContactLink].forEach((href,i)=>{ if(navLinks[i] && href) navLinks[i].href=href; });
+    setText('header .btn-sm', c.headerBookButton);
+    setAttr('header .header-phone', 'href', `tel:${String(c.phone || '').replace(/[^+\d]/g,'')}`);
+
+    setText('.hero .eyebrow', c.heroEyebrow);
+    setHtml('.hero-title', c.heroTitleHtml);
+    setText('.hero-sub', c.heroDescription);
+    const heroButtons = document.querySelectorAll('.hero-content .btn');
+    if (heroButtons[0]) { heroButtons[0].textContent = c.heroPrimaryText; heroButtons[0].href = c.heroPrimaryLink; }
+    if (heroButtons[1]) { heroButtons[1].textContent = c.heroSecondaryText; heroButtons[1].href = c.heroSecondaryLink; }
+    setAttr('.hero-img', 'src', c.heroImage);
+
+    setText('.about .eyebrow', c.aboutEyebrow);
+    setHtml('.about .section-title', c.aboutTitleHtml);
+    setText('.about .lead', c.aboutLead);
+    const aboutPs = document.querySelectorAll('.about .about-copy > p:not(.eyebrow):not(.lead)');
+    if (aboutPs[0]) aboutPs[0].textContent = c.aboutText;
+    setText('.about .text-link', c.aboutLinkText);
+    setAttr('.about .text-link', 'href', c.aboutLink);
+    setAttr('.about .about-media img', 'src', c.aboutImage);
+    setText('.about-badge-num', c.aboutBadgeNumber);
+    setText('.about-badge-label', c.aboutBadgeLabel);
+
+    setText('.occasions .eyebrow', c.occasionsEyebrow);
+    setHtml('.occasions .section-title', c.occasionsTitleHtml);
+    setIndexed('.occasions h3', [c.occasion1Title,c.occasion2Title,c.occasion3Title,c.occasion4Title]);
+    setIndexed('.occasions .occasion-card p', [c.occasion1Text,c.occasion2Text,c.occasion3Text,c.occasion4Text]);
+
+    setAttr('.why-media img', 'src', c.whyImage);
+    setText('.why .eyebrow', c.whyEyebrow);
+    setHtml('.why .section-title', c.whyTitleHtml);
+    setIndexed('.why-item h3', [c.why1Title,c.why2Title,c.why3Title,c.why4Title]);
+    setIndexed('.why-item p', [c.why1Text,c.why2Text,c.why3Text,c.why4Text]);
+    setIndexed('.stat-num', [c.stat1Number,c.stat2Number,c.stat3Number,c.stat4Number]);
+    setIndexed('.stat-label', [c.stat1Label,c.stat2Label,c.stat3Label,c.stat4Label]);
+
+    setText('.gallery .eyebrow', c.galleryEyebrow);
+    setHtml('.gallery .section-title', c.galleryTitleHtml);
+    setIndexed('#galleryFilters .filter-btn', [c.galleryFilterAll,c.galleryFilter1,c.galleryFilter2,c.galleryFilter3,c.galleryFilter4]);
+
+    setText('.testimonials .eyebrow', c.testimonialsEyebrow);
+    setIndexed('.testimonials .testi p', [c.testimonial1,c.testimonial2,c.testimonial3]);
+    setIndexed('.testimonials .testi cite', [c.testimonial1Name,c.testimonial2Name,c.testimonial3Name]);
+
+    setText('.booking .booking-intro > .eyebrow', c.bookingEyebrow);
+    setHtml('.booking .booking-intro .section-title', c.bookingTitleHtml);
+    setText('.booking .booking-intro > .lead', c.bookingLead);
+    const bookingInfo = document.querySelectorAll('.booking-info-list > div');
+    if (bookingInfo[0]) { const a=bookingInfo[0].querySelector('a'); if(a){a.textContent=c.phone;a.href=`tel:${String(c.phone||'').replace(/[^+\d]/g,'')}`;} }
+    if (bookingInfo[1]) { const a=bookingInfo[1].querySelector('a'); if(a){a.textContent=c.email;a.href=`mailto:${c.email||''}`;} }
+    if (bookingInfo[2]) { const span=bookingInfo[2].querySelector('span'); if(span) span.textContent=c.bookingAddress; }
+    setIndexed('.booking-packages .pkg-tag', [c.package1Name,c.package2Name,c.package3Name]);
+    setIndexed('.booking-packages .pkg p', [c.package1Text,c.package2Text,c.package3Text]);
+    setText('.ticket-eyebrow', c.ticketEyebrow);
+    const labels = document.querySelectorAll('#bookingForm label');
+    setIndexed('#bookingForm label', [c.labelFullName,c.labelPhone,c.labelEmail,c.labelOccasion,c.labelPackage,c.labelDate,c.labelTime,c.labelGuests,c.labelNotes]);
+    setAttr('#fullName','placeholder',c.placeholderFullName);
+    setAttr('#phone','placeholder',c.placeholderPhone);
+    setAttr('#email','placeholder',c.placeholderEmail);
+    setAttr('#guests','placeholder',c.placeholderGuests);
+    setAttr('#notes','placeholder',c.placeholderNotes);
+    setText('#bookingForm [type="submit"]', c.submitButton);
+    setText('.ticket-note', c.bookingNote);
+    setText('#ticketSuccess h3', c.successTitle);
+    setText('#ticketSuccessText', c.successText);
+    setText('#whatsappConfirmBtn', c.whatsappButton);
+    setText('#bookAnotherBtn', c.bookAnotherButton);
+    setText('#goTrackLink', c.goTrackLink);
+
+    setText('.track .eyebrow', c.trackEyebrow);
+    setHtml('.track .section-title', c.trackTitleHtml);
+    setText('.track .lead', c.trackLead);
+    setAttr('#trackQuery','placeholder',c.trackPlaceholder);
+    setText('#trackForm .btn', c.trackButton);
+    setText('#trackEmpty', c.trackEmpty);
+
+    setText('.contact .eyebrow', c.contactEyebrow);
+    setHtml('.contact .section-title', c.contactTitleHtml);
+    setText('.contact .lead', c.contactLead);
+    setIndexed('.contact-card > div > span', [c.contactAddressLabel,c.contactPhoneLabel,c.contactEmailLabel,c.contactHoursLabel]);
+    const contactValues = document.querySelectorAll('.contact-card > div > p');
+    if(contactValues[0]) contactValues[0].textContent=c.address;
+    if(contactValues[1]) { contactValues[1].textContent=c.phone; }
+    if(contactValues[2]) contactValues[2].textContent=c.email;
+    if(contactValues[3]) contactValues[3].textContent=c.hours;
+    const contactPhone = document.querySelector('.contact-card > div:nth-child(2) a');
+    if(contactPhone){ contactPhone.textContent=c.phone; contactPhone.href=`tel:${String(c.phone||'').replace(/[^+\d]/g,'')}`; }
+    const contactEmail = document.querySelector('.contact-card > div:nth-child(3) a');
+    if(contactEmail){ contactEmail.textContent=c.email; contactEmail.href=`mailto:${c.email||''}`; }
+    setAttr('.contact-map iframe','src',c.mapUrl);
+
+    setText('.footer-col:nth-child(2) h4', c.footerQuickHeading);
+    setText('.footer-col:nth-child(3) h4', c.footerContactHeading);
+    setText('.footer-col:nth-child(4) h4', c.footerFollowHeading);
+    setIndexed('.footer-col:nth-child(2) a', [c.footerAboutLink,c.footerGalleryLink,c.footerBookLink,c.footerContactLink]);
+    const footerContactLinks = document.querySelectorAll('.footer-col:nth-child(3) a');
+    if(footerContactLinks[0]) { footerContactLinks[0].textContent=c.phone; footerContactLinks[0].href=`tel:${String(c.phone||'').replace(/[^+\d]/g,'')}`; }
+    if(footerContactLinks[1]) { footerContactLinks[1].textContent=c.email; footerContactLinks[1].href=`mailto:${c.email||''}`; }
+    setText('.footer-col:nth-child(3) span', c.shortAddress);
+    setText('.footer-bottom span:first-child', `© ${new Date().getFullYear()} ${c.copyright || c.brandName}.`);
+
+    setIndexed('.hero .hero-social a', [c.instagramText,c.whatsappText]);
+    setIndexed('.contact-social a', [c.instagramText,c.whatsappText]);
+    setIndexed('.footer-col:nth-child(4) a', [c.instagramText,c.whatsappText]);
+    setAttr('.hero .hero-social a:first-child','href',c.instagramUrl);
+    setAttr('.contact-social a:first-child','href',c.instagramUrl);
+    setAttr('.footer-col:nth-child(4) a:first-child','href',c.instagramUrl);
+    setAttr('.hero .hero-social a:nth-child(2)','href',c.whatsappUrl);
+    setAttr('.contact-social a:nth-child(2)','href',c.whatsappUrl);
+    setAttr('.footer-col:nth-child(4) a:nth-child(2)','href',c.whatsappUrl);
+    window.PH_CMS_WHATSAPP_BASE = c.whatsappUrl ? String(c.whatsappUrl).split('&text=')[0] : 'https://api.whatsapp.com/send?phone=917981793207';
+    setAttr('.whatsapp-float','href',c.whatsappUrl);
+    setAttr('#whatsappConfirmBtn','href',c.whatsappUrl);
+
+    setSelect('occasion', c.bookingOccasions);
+    setSelect('package', c.bookingPackages);
+    setSelect('time', c.timeSlots);
+    const guests = document.getElementById('guests');
+    if (guests && Number(c.maxGuests) > 0) guests.max = String(c.maxGuests);
+
+    setVisible('#about', c.showAbout);
+    setVisible('#occasions', c.showOccasions);
+    setVisible('.why', c.showWhy);
+    setVisible('#gallery', c.showGallery);
+    setVisible('.testimonials', c.showTestimonials);
+    setVisible('#booking', c.showBooking);
+    setVisible('#track', c.showTrack);
+    setVisible('#contact', c.showContact);
+    applyTheme(c);
+  }
+
+  async function loadSiteContent() {
+    try {
+      const response = await fetch(CMS_API, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const result = await response.json();
+      if (result.success && result.content) applyContent(result.content);
+    } catch (error) {
+      console.warn('Website content service unavailable; using the built-in website content.', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadSiteContent();
+    setInterval(loadSiteContent, 15000);
+  });
+})();

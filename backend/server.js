@@ -276,108 +276,74 @@ async function updateBookingStatus(req, res) {
 
     try {
 
-        const { status } = req.body;
-
-        if (!status) {
-
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Status is required"
-
-            });
-
-        }
-
         const allowedStatuses = [
-
             "Pending",
             "Confirmed",
             "Completed",
             "Cancelled"
-
         ];
 
-        if (!allowedStatuses.includes(status)) {
+        const allowedFields = [
+            "fullName", "phone", "email", "occasion", "package",
+            "date", "time", "guests", "notes", "status"
+        ];
 
-            return res.status(400).json({
-
-                success: false,
-
-                message:
-                    "Invalid status. Allowed values: Pending, Confirmed, Completed, Cancelled"
-
-            });
-
+        const update = {};
+        for (const field of allowedFields) {
+            if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+                update[field] = req.body[field];
+            }
         }
 
-        const booking =
-            await Booking.findOneAndUpdate(
+        if (update.status && !allowedStatuses.includes(update.status)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status. Allowed values: Pending, Confirmed, Completed, Cancelled"
+            });
+        }
 
-                {
-                    id: req.params.id
-                },
+        if (!Object.keys(update).length) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one booking field is required"
+            });
+        }
 
-                {
-                    status: status
-                },
-
-                {
-                    new: true,
-                    runValidators: true
-                }
-
-            );
+        const booking = await Booking.findOneAndUpdate(
+            { id: req.params.id },
+            update,
+            { new: true, runValidators: true }
+        );
 
         if (!booking) {
-
             return res.status(404).json({
-
                 success: false,
-
-                message:
-                    "Booking not found"
-
+                message: "Booking not found"
             });
-
         }
 
         res.json({
-
             success: true,
-
-            message:
-                "Booking status updated successfully",
-
+            message: "Booking updated successfully",
             booking
-
         });
 
     } catch (error) {
 
         console.error(
-            "Booking status update failed:",
+            "Booking update failed:",
             error.message
         );
 
         res.status(500).json({
-
             success: false,
-
-            message:
-                "Failed to update booking status",
-
-            error:
-                error.message
-
+            message: "Failed to update booking",
+            error: error.message
         });
 
     }
 
 }
-
 
 // ------------------------------------------
 // PATCH BOOKING
@@ -462,6 +428,59 @@ app.delete("/api/bookings/:id", async (req, res) => {
 
     }
 
+});
+
+
+// ==========================================
+// WEBSITE CONTENT API
+// ==========================================
+
+app.get("/api/site-content", async (req, res) => {
+    try {
+        const saved = await SiteContent.findOne({ key: "main" }).lean();
+        res.json({
+            success: true,
+            content: {
+                ...siteContentDefaults,
+                ...(saved?.data || {})
+            }
+        });
+    } catch (error) {
+        console.error("Failed to get site content:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to get website content",
+            error: error.message
+        });
+    }
+});
+
+app.put("/api/site-content", async (req, res) => {
+    try {
+        if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
+            return res.status(400).json({ success: false, message: "Website content must be an object" });
+        }
+
+        const content = { ...siteContentDefaults, ...req.body };
+        const saved = await SiteContent.findOneAndUpdate(
+            { key: "main" },
+            { key: "main", data: content },
+            { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true }
+        );
+
+        res.json({
+            success: true,
+            message: "Website content saved successfully",
+            content: saved.data
+        });
+    } catch (error) {
+        console.error("Website content save failed:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to save website content",
+            error: error.message
+        });
+    }
 });
 
 

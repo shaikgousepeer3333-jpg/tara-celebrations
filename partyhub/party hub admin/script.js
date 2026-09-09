@@ -1227,148 +1227,73 @@ function renderBookingsTable() {
 
 function openBookingModal(id) {
 
-    const booking =
-        adminBookings.find(
-            (item) =>
-                String(item.id) ===
-                String(id)
-        );
-
+    const booking = adminBookings.find(
+        (item) => String(item.id) === String(id)
+    );
 
     if (!booking) {
-
         toast("Booking not found");
-
         return;
     }
-
 
     currentBookingId = id;
 
+    const modalBody = document.getElementById("modalBody");
+    const modal = document.getElementById("bookingModal");
 
-    const modalBody =
-        document.getElementById(
-            "modalBody"
-        );
-
-
-    if (!modalBody) {
-        return;
-    }
-
-
-    let bookedDate = "—";
-
-
-    if (booking.createdAt) {
-
-        const date =
-            new Date(
-                booking.createdAt
-            );
-
-        if (
-            !Number.isNaN(
-                date.getTime()
-            )
-        ) {
-
-            bookedDate =
-                date.toLocaleString(
-                    "en-IN"
-                );
-        }
-    }
-
+    if (!modalBody || !modal) return;
 
     modalBody.innerHTML = `
-
         <dt>Reference</dt>
-        <dd>
-            ${escapeHtml(booking.id)}
-        </dd>
+        <dd><strong>${escapeHtml(booking.id)}</strong></dd>
 
         <dt>Guest</dt>
-        <dd>
-            ${escapeHtml(booking.fullName)}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="fullName" value="${escapeHtml(booking.fullName)}"></dd>
 
         <dt>Phone</dt>
-        <dd>
-            ${escapeHtml(booking.phone)}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="phone" value="${escapeHtml(booking.phone)}"></dd>
 
         <dt>Email</dt>
-        <dd>
-            ${escapeHtml(
-                booking.email || "—"
-            )}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="email" value="${escapeHtml(booking.email || '')}"></dd>
 
         <dt>Occasion</dt>
-        <dd>
-            ${escapeHtml(booking.occasion)}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="occasion" value="${escapeHtml(booking.occasion)}"></dd>
 
         <dt>Package</dt>
-        <dd>
-            ${escapeHtml(booking.package)}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="package" value="${escapeHtml(booking.package)}"></dd>
 
         <dt>Date</dt>
-        <dd>
-            ${escapeHtml(booking.date)}
-        </dd>
+        <dd><input class="booking-edit-input" type="date" data-booking-field="date" value="${escapeHtml(booking.date)}"></dd>
 
         <dt>Time</dt>
-        <dd>
-            ${escapeHtml(booking.time)}
-        </dd>
+        <dd><input class="booking-edit-input" data-booking-field="time" value="${escapeHtml(booking.time)}"></dd>
 
         <dt>Guests</dt>
-        <dd>
-            ${escapeHtml(booking.guests)}
-        </dd>
+        <dd><input class="booking-edit-input" type="number" min="1" data-booking-field="guests" value="${escapeHtml(booking.guests)}"></dd>
 
         <dt>Notes</dt>
-        <dd>
-            ${escapeHtml(
-                booking.notes || "—"
-            )}
-        </dd>
+        <dd><textarea class="booking-edit-input" data-booking-field="notes" rows="3">${escapeHtml(booking.notes || '')}</textarea></dd>
 
         <dt>Status</dt>
         <dd>
-
-            <span
-                class="badge badge-${escapeHtml(
-                    booking.status
-                )}"
-            >
-                ${escapeHtml(
-                    booking.status
-                )}
-            </span>
-
+            <select class="booking-edit-input" data-booking-field="status">
+                ${['Pending','Confirmed','Completed','Cancelled'].map(status => `<option value="${status}" ${String(booking.status) === status ? 'selected' : ''}>${status}</option>`).join('')}
+            </select>
         </dd>
-
-        <dt>Booked</dt>
-        <dd>
-            ${escapeHtml(bookedDate)}
-        </dd>
-
     `;
 
-
-    const modal =
-        document.getElementById(
-            "bookingModal"
-        );
-
-
-    if (modal) {
-        modal.hidden = false;
+    let saveButton = document.getElementById("saveBookingEdits");
+    if (!saveButton) {
+        const actions = modal.querySelector(".modal-actions");
+        saveButton = document.createElement("button");
+        saveButton.type = "button";
+        saveButton.id = "saveBookingEdits";
+        saveButton.className = "btn-gold sm";
+        saveButton.textContent = "Save Booking Changes";
+        actions?.insertBefore(saveButton, actions.firstChild);
     }
+
+    modal.hidden = false;
 }
 
 
@@ -2283,6 +2208,256 @@ function phApplyLogos() {
 }
 
 
+
+
+// ==========================================
+// EDIT ALL BOOKING DETAILS
+// ==========================================
+
+async function saveBookingEdits() {
+    if (!currentBookingId) return;
+
+    const update = {};
+    document.querySelectorAll("#modalBody [data-booking-field]").forEach((field) => {
+        update[field.dataset.bookingField] = field.value;
+    });
+
+    const button = document.getElementById("saveBookingEdits");
+    if (button) {
+        button.disabled = true;
+        button.textContent = "Saving…";
+    }
+
+    try {
+        const response = await fetch(
+            `${API_URL}/bookings/${encodeURIComponent(currentBookingId)}`,
+            {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(update)
+            }
+        );
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Failed to update booking");
+        }
+
+        adminBookings = adminBookings.map((booking) =>
+            String(booking.id) === String(currentBookingId)
+                ? { ...booking, ...(result.booking || update) }
+                : booking
+        );
+
+        renderBookingsTable();
+        refreshDashboard();
+        closeBookingModal();
+        toast("Booking changes saved");
+    } catch (error) {
+        console.error("Booking edit failed:", error);
+        toast(error.message || "Failed to save booking");
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = "Save Booking Changes";
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const style = document.createElement("style");
+    style.textContent = `
+      .booking-edit-input{width:100%;box-sizing:border-box;background:#120d0e;border:1px solid rgba(255,255,255,.13);color:#f4ead4;border-radius:5px;padding:9px 10px;font:inherit}
+      .booking-edit-input:focus{outline:none;border-color:#c9a446}
+      .modal-dl dd{margin-bottom:9px}
+    `;
+    document.head.appendChild(style);
+
+    document.addEventListener("click", (event) => {
+        if (event.target?.id === "saveBookingEdits") saveBookingEdits();
+    });
+});
+
 // ==========================================
 // END OF ADMIN SCRIPT
 // ==========================================
+/* =========================================================
+   CUSTOMER WEBSITE CONTROL CENTER
+   ========================================================= */
+(function websiteControlCenter() {
+  const CMS_API = `${API_URL}/site-content`;
+
+  const GROUPS = [
+    { title: 'Brand & Contact', keys: ['brandName','logoUrl','phone','email','address','shortAddress','hours','instagramUrl','whatsappUrl','mapUrl'] },
+    { title: 'Navigation', keys: ['navHome','navAbout','navOccasions','navGallery','navBook','navTrack','navContact','navHomeLink','navAboutLink','navOccasionsLink','navGalleryLink','navBookLink','navTrackLink','navContactLink','headerBookButton'] },
+    { title: 'Hero', keys: ['heroEyebrow','heroTitleHtml','heroDescription','heroPrimaryText','heroPrimaryLink','heroSecondaryText','heroSecondaryLink','heroImage'] },
+    { title: 'About', keys: ['aboutEyebrow','aboutTitleHtml','aboutLead','aboutText','aboutLinkText','aboutLink','aboutImage','aboutBadgeNumber','aboutBadgeLabel'] },
+    { title: 'Occasions', keys: ['occasionsEyebrow','occasionsTitleHtml','occasion1Title','occasion1Text','occasion2Title','occasion2Text','occasion3Title','occasion3Text','occasion4Title','occasion4Text'] },
+    { title: 'Why Choose Us & Stats', keys: ['whyImage','whyEyebrow','whyTitleHtml','why1Title','why1Text','why2Title','why2Text','why3Title','why3Text','why4Title','why4Text','stat1Number','stat1Label','stat2Number','stat2Label','stat3Number','stat3Label','stat4Number','stat4Label'] },
+    { title: 'Gallery', keys: ['galleryEyebrow','galleryTitleHtml','galleryFilterAll','galleryFilter1','galleryFilter2','galleryFilter3','galleryFilter4'] },
+    { title: 'Testimonials', keys: ['testimonialsEyebrow','testimonial1','testimonial1Name','testimonial2','testimonial2Name','testimonial3','testimonial3Name'] },
+    { title: 'Booking', keys: ['bookingEyebrow','bookingTitleHtml','bookingLead','bookingAddress','package1Name','package1Text','package2Name','package2Text','package3Name','package3Text','ticketEyebrow','labelFullName','placeholderFullName','labelPhone','placeholderPhone','labelEmail','placeholderEmail','labelOccasion','labelPackage','labelDate','labelTime','labelGuests','placeholderGuests','labelNotes','placeholderNotes','submitButton','bookingNote','successTitle','successText','whatsappButton','bookAnotherButton','goTrackLink','bookingOccasions','bookingPackages','timeSlots','maxGuests'] },
+    { title: 'Track Booking', keys: ['trackEyebrow','trackTitleHtml','trackLead','trackPlaceholder','trackButton','trackEmpty'] },
+    { title: 'Contact', keys: ['contactEyebrow','contactTitleHtml','contactLead','contactAddressLabel','contactPhoneLabel','contactEmailLabel','contactHoursLabel'] },
+    { title: 'Footer & Social', keys: ['footerTagline','footerDescription','footerQuickHeading','footerContactHeading','footerFollowHeading','footerAboutLink','footerGalleryLink','footerBookLink','footerContactLink','copyright','instagramText','whatsappText'] },
+    { title: 'Theme & Visibility', keys: ['themeGold','themeGoldBright','themeMaroon','themeInk','themeCream','showAbout','showOccasions','showWhy','showGallery','showTestimonials','showBooking','showTrack','showContact'] }
+  ];
+
+  const LABELS = {
+    brandName:'Business / Brand Name', logoUrl:'Logo Image URL', phone:'Phone Number', email:'Email Address', address:'Full Address', shortAddress:'Short Address', hours:'Opening Hours', instagramUrl:'Instagram URL', whatsappUrl:'WhatsApp URL', mapUrl:'Google Maps Embed URL',
+    navHome:'Home Label',navAbout:'About Label',navOccasions:'Occasions Label',navGallery:'Gallery Label',navBook:'Book Label',navTrack:'Track Label',navContact:'Contact Label',navHomeLink:'Home Link',navAboutLink:'About Link',navOccasionsLink:'Occasions Link',navGalleryLink:'Gallery Link',navBookLink:'Book Link',navTrackLink:'Track Link',navContactLink:'Contact Link',headerBookButton:'Header Book Button',
+    heroEyebrow:'Small Heading',heroTitleHtml:'Main Heading (basic HTML allowed)',heroDescription:'Description',heroPrimaryText:'Primary Button Text',heroPrimaryLink:'Primary Button Link',heroSecondaryText:'Secondary Button Text',heroSecondaryLink:'Secondary Button Link',heroImage:'Hero Image URL',
+    aboutEyebrow:'Small Heading',aboutTitleHtml:'Heading (basic HTML allowed)',aboutLead:'Lead Text',aboutText:'Body Text',aboutLinkText:'Link Text',aboutLink:'Link URL',aboutImage:'About Image URL',aboutBadgeNumber:'Badge Number',aboutBadgeLabel:'Badge Label',
+    occasionsEyebrow:'Small Heading',occasionsTitleHtml:'Heading (basic HTML allowed)',occasion1Title:'Occasion 1 Name',occasion1Text:'Occasion 1 Description',occasion2Title:'Occasion 2 Name',occasion2Text:'Occasion 2 Description',occasion3Title:'Occasion 3 Name',occasion3Text:'Occasion 3 Description',occasion4Title:'Occasion 4 Name',occasion4Text:'Occasion 4 Description',
+    whyImage:'Why Section Image URL',whyEyebrow:'Small Heading',whyTitleHtml:'Heading (basic HTML allowed)',why1Title:'Feature 1 Title',why1Text:'Feature 1 Description',why2Title:'Feature 2 Title',why2Text:'Feature 2 Description',why3Title:'Feature 3 Title',why3Text:'Feature 3 Description',why4Title:'Feature 4 Title',why4Text:'Feature 4 Description',stat1Number:'Statistic 1 Number',stat1Label:'Statistic 1 Label',stat2Number:'Statistic 2 Number',stat2Label:'Statistic 2 Label',stat3Number:'Statistic 3 Number',stat3Label:'Statistic 3 Label',stat4Number:'Statistic 4 Number',stat4Label:'Statistic 4 Label',
+    galleryEyebrow:'Small Heading',galleryTitleHtml:'Heading (basic HTML allowed)',galleryFilterAll:'All Filter',galleryFilter1:'Filter 1',galleryFilter2:'Filter 2',galleryFilter3:'Filter 3',galleryFilter4:'Filter 4',
+    testimonialsEyebrow:'Small Heading',testimonial1:'Review 1',testimonial1Name:'Review 1 Name',testimonial2:'Review 2',testimonial2Name:'Review 2 Name',testimonial3:'Review 3',testimonial3Name:'Review 3 Name',
+    bookingEyebrow:'Small Heading',bookingTitleHtml:'Heading (basic HTML allowed)',bookingLead:'Lead Text',bookingAddress:'Booking Address',package1Name:'Package 1 Name',package1Text:'Package 1 Description',package2Name:'Package 2 Name',package2Text:'Package 2 Description',package3Name:'Package 3 Name',package3Text:'Package 3 Description',ticketEyebrow:'Ticket Heading',labelFullName:'Full Name Label',placeholderFullName:'Full Name Placeholder',labelPhone:'Phone Label',placeholderPhone:'Phone Placeholder',labelEmail:'Email Label',placeholderEmail:'Email Placeholder',labelOccasion:'Occasion Label',labelPackage:'Package Label',labelDate:'Date Label',labelTime:'Time Label',labelGuests:'Guests Label',placeholderGuests:'Guests Placeholder',labelNotes:'Notes Label',placeholderNotes:'Notes Placeholder',submitButton:'Submit Button Text',bookingNote:'Booking Note',successTitle:'Success Heading',successText:'Success Text',whatsappButton:'WhatsApp Button Text',bookAnotherButton:'Book Another Text',goTrackLink:'Track Link Text',bookingOccasions:'Booking Occasion Options (one per line)',bookingPackages:'Booking Package Options (one per line)',timeSlots:'Booking Time Slots (one per line)',maxGuests:'Maximum Guests',
+    trackEyebrow:'Small Heading',trackTitleHtml:'Heading (basic HTML allowed)',trackLead:'Lead Text',trackPlaceholder:'Search Placeholder',trackButton:'Button Text',trackEmpty:'No Booking Message',
+    contactEyebrow:'Small Heading',contactTitleHtml:'Heading (basic HTML allowed)',contactLead:'Lead Text',contactAddressLabel:'Address Label',contactPhoneLabel:'Phone Label',contactEmailLabel:'Email Label',contactHoursLabel:'Hours Label',
+    footerTagline:'Footer Tagline',footerDescription:'Footer Description',footerQuickHeading:'Quick Links Heading',footerContactHeading:'Contact Heading',footerFollowHeading:'Follow Heading',footerAboutLink:'Footer About Link',footerGalleryLink:'Footer Gallery Link',footerBookLink:'Footer Book Link',footerContactLink:'Footer Contact Link',copyright:'Copyright Text',instagramText:'Instagram Text',whatsappText:'WhatsApp Text',
+    themeGold:'Gold Color',themeGoldBright:'Bright Gold Color',themeMaroon:'Maroon Color',themeInk:'Dark Background Color',themeCream:'Cream Text Color',showAbout:'Show About Section',showOccasions:'Show Occasions Section',showWhy:'Show Why Section',showGallery:'Show Gallery Section',showTestimonials:'Show Testimonials Section',showBooking:'Show Booking Section',showTrack:'Show Track Section',showContact:'Show Contact Section'
+  };
+
+  let content = {};
+
+  function esc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function fieldType(key) {
+    if (['showAbout','showOccasions','showWhy','showGallery','showTestimonials','showBooking','showTrack','showContact'].includes(key)) return 'boolean';
+    if (['maxGuests'].includes(key)) return 'number';
+    if (/Html$/.test(key)) return 'html';
+    if (/Url$/.test(key) || ['logoUrl','heroImage','aboutImage','whyImage','mapUrl'].includes(key)) return 'url';
+    if (Array.isArray(content[key])) return 'array';
+    if (key.endsWith('Text') || key.includes('Description') || key.includes('Lead') || key.includes('Review') || key.includes('Empty') || key.includes('Note') || key.includes('Address')) return 'textarea';
+    return 'text';
+  }
+  function inputFor(key) {
+    const value = content[key];
+    const type = fieldType(key);
+    const label = LABELS[key] || key;
+    if (type === 'boolean') return `<label class="cms-switch"><input type="checkbox" data-cms-key="${esc(key)}" ${value !== false ? 'checked' : ''}><span>${esc(label)}</span></label>`;
+    if (type === 'array') return `<label class="cms-field"><span>${esc(label)}</span><textarea data-cms-key="${esc(key)}" rows="5" placeholder="One item per line">${esc(value.join('\n'))}</textarea></label>`;
+    if (type === 'html' || type === 'textarea') return `<label class="cms-field"><span>${esc(label)}</span><textarea data-cms-key="${esc(key)}" rows="${type === 'html' ? 4 : 5}">${esc(type === 'array' ? value.join('\n') : value ?? '')}</textarea></label>`;
+    const inputType = type === 'number' ? 'number' : type === 'url' ? 'url' : 'text';
+    return `<label class="cms-field"><span>${esc(label)}</span><input type="${inputType}" data-cms-key="${esc(key)}" value="${esc(value ?? '')}"></label>`;
+  }
+
+  function createUI() {
+    const nav = document.querySelector('.sidebar-nav');
+    if (nav && !nav.querySelector('[data-view="website"]')) {
+      const btn = document.createElement('button');
+      btn.className = 'side-link';
+      btn.dataset.view = 'website';
+      btn.innerHTML = '<span style="font-size:18px">✎</span> Website';
+      const settings = nav.querySelector('[data-view="settings"]');
+      nav.insertBefore(btn, settings || null);
+    }
+
+    if (document.getElementById('view-website')) return;
+    const settingsView = document.getElementById('view-settings');
+    const view = document.createElement('section');
+    view.className = 'view';
+    view.id = 'view-website';
+    view.hidden = true;
+    view.innerHTML = `
+      <header class="view-head">
+        <div><p class="eyebrow">Manage</p><h1>Customer Website</h1><p style="opacity:.7;margin-top:6px">Change your customer website from one place. Save once and the live site will use the new content.</p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn-outline" id="cmsReload">Reload</button>
+          <a class="btn-gold" href="index.html" target="_blank" rel="noopener">Preview Website ↗</a>
+          <button class="btn-gold" id="cmsSave">Save All Changes</button>
+        </div>
+      </header>
+      <div id="cmsStatus" class="form-msg" style="margin-bottom:18px"></div>
+      <div class="cms-note"><strong>Tip:</strong> For images, paste an image URL. For headings marked “basic HTML”, you may use <code>&lt;br&gt;</code>, <code>&lt;em&gt;</code> and <code>&lt;strong&gt;</code>.</div>
+      <div id="cmsEditor"></div>
+    `;
+    if (settingsView) settingsView.parentNode.insertBefore(view, settingsView); else document.querySelector('.admin-main').appendChild(view);
+  }
+
+  function renderEditor() {
+    const editor = document.getElementById('cmsEditor');
+    if (!editor) return;
+    editor.innerHTML = GROUPS.map(group => `
+      <div class="panel cms-panel">
+        <div class="panel-head"><h2>${esc(group.title)}</h2></div>
+        <div class="cms-grid">${group.keys.map(inputFor).join('')}</div>
+      </div>
+    `).join('');
+  }
+
+  function collect() {
+    document.querySelectorAll('#cmsEditor [data-cms-key]').forEach(el => {
+      const key = el.dataset.cmsKey;
+      if (el.type === 'checkbox') content[key] = el.checked;
+      else if (Array.isArray(content[key])) content[key] = el.value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+      else if (fieldType(key) === 'number') content[key] = Math.max(1, Number(el.value || 1));
+      else content[key] = el.value;
+    });
+    return content;
+  }
+
+  function status(message, ok = false) {
+    const el = document.getElementById('cmsStatus');
+    if (!el) return;
+    el.textContent = message;
+    el.className = `form-msg ${ok ? 'ok' : 'err'}`;
+  }
+
+  async function load() {
+    status('Loading website settings…');
+    try {
+      const response = await fetch(CMS_API, { cache: 'no-store' });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Could not load website settings');
+      content = result.content || {};
+      renderEditor();
+      status('Website settings loaded.', true);
+    } catch (error) {
+      console.error(error);
+      status(`Could not load website settings: ${error.message}`);
+    }
+  }
+
+  async function save() {
+    collect();
+    const button = document.getElementById('cmsSave');
+    if (button) { button.disabled = true; button.textContent = 'Saving…'; }
+    status('Saving website changes…');
+    try {
+      const response = await fetch(CMS_API, { method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(content) });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || `HTTP ${response.status}`);
+      content = result.content || content;
+      renderEditor();
+      status('✓ Website changes saved. Open Preview Website to see them.', true);
+    } catch (error) {
+      console.error(error);
+      status(`Could not save website changes: ${error.message}`);
+    } finally {
+      if (button) { button.disabled = false; button.textContent = 'Save All Changes'; }
+    }
+  }
+
+  function injectStyles() {
+    if (document.getElementById('cmsStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'cmsStyles';
+    style.textContent = `
+      .cms-note{background:rgba(201,164,70,.08);border:1px solid rgba(201,164,70,.3);padding:14px 16px;border-radius:8px;margin-bottom:18px;color:#e9ddc4}
+      .cms-note code{color:#ecd48f}.cms-panel{margin-bottom:18px}.cms-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;padding:18px}.cms-field{display:flex;flex-direction:column;gap:7px}.cms-field>span{font-size:.78rem;letter-spacing:.04em;color:#cdbf9f}.cms-field input,.cms-field textarea{width:100%;box-sizing:border-box;background:#120d0e;border:1px solid rgba(255,255,255,.12);color:#f4ead4;border-radius:6px;padding:11px 12px;font:inherit}.cms-field textarea{resize:vertical;min-height:70px}.cms-switch{display:flex;align-items:center;gap:10px;background:#120d0e;border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:6px;color:#f4ead4}.cms-switch input{accent-color:#c9a446;width:18px;height:18px}.cms-grid .cms-switch{align-self:end}.form-msg.ok{color:#8bd3a5}.form-msg.err{color:#ef9a92}@media(max-width:800px){.cms-grid{grid-template-columns:1fr}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    createUI();
+    injectStyles();
+    document.getElementById('cmsSave')?.addEventListener('click', save);
+    document.getElementById('cmsReload')?.addEventListener('click', load);
+    document.querySelector('[data-view="website"]')?.addEventListener('click', () => {
+      if (!document.querySelector('#cmsEditor [data-cms-key]')) load();
+    });
+    load();
+  });
+})();
